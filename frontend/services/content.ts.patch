@@ -1,0 +1,6 @@
+// Phase 5 Track E — patch notes (no actual file write).
+// The existing services/content.ts already exposes:
+//   - getContent(id), updateContent(id, fields)
+//   - generateVariants(id, n)
+//   - downloadContentImage(id), contentExportUrl(id, format)
+// Track E uses these as-is; no changes needed on the client.

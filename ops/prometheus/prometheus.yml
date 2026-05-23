@@ -1,0 +1,23 @@
+# Prometheus scrape config for NexusMind (Phase 3.7).
+# Run:  prometheus.exe --config.file=ops/prometheus/prometheus.yml
+#
+# If METRICS_TOKEN is set in the backend .env, uncomment the authorization
+# block below and supply the same token.
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: nexusmind-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["localhost:8000"]
+    # authorization:
+    #   type: Bearer
+    #   credentials: "<METRICS_TOKEN>"
+
+  # Optional — only needed for the System dashboard. Install windows_exporter
+  # from https://github.com/prometheus-community/windows_exporter
+  - job_name: windows
+    static_configs:
+      - targets: ["localhost:9182"]

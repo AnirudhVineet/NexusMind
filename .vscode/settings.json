@@ -1,0 +1,15 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/Scripts/python.exe",
+  "python.analysis.extraPaths": ["${workspaceFolder}/backend"],
+  "python.analysis.autoSearchPaths": true,
+  "python.terminal.activateEnvironment": true,
+
+  "mypy.configFile": "mypy.ini",
+  "mypy.targets": ["backend/app"],
+  "mypy.runUsingActiveInterpreter": false,
+
+  "mypy-type-checker.interpreter": [
+    "${workspaceFolder}/backend/.venv/Scripts/python.exe"
+  ],
+  "mypy-type-checker.args": ["--config-file=${workspaceFolder}/mypy.ini"]
+}

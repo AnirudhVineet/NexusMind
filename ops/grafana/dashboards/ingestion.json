@@ -1,0 +1,102 @@
+{
+  "uid": "nexusmind-ingestion",
+  "title": "NexusMind — Ingestion",
+  "tags": ["nexusmind"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": { "list": [] },
+  "annotations": { "list": [] },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Celery Queue Depth",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "nexusmind_celery_queue_depth",
+          "legendFormat": "{{queue}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Task Failures (rate / 5m)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "rate(nexusmind_task_failures_total[5m])",
+          "legendFormat": "{{task}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Ingestion Events (rate / 5m)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (source_type, status) (rate(nexusmind_ingestion_status_total[5m]))",
+          "legendFormat": "{{source_type}} · {{status}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "NER Duration p95",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, extractor) (rate(nexusmind_ner_duration_seconds_bucket[5m])))",
+          "legendFormat": "{{extractor}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Claims Extracted (total)",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 16 },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" } }, "overrides": [] },
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        { "refId": "A", "expr": "sum(nexusmind_claims_extracted_total)" }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Contradictions Confirmed (total)",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 16 },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" } }, "overrides": [] },
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        { "refId": "A", "expr": "sum(nexusmind_contradictions_confirmed_total)" }
+      ]
+    }
+  ]
+}

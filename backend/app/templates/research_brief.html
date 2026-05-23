@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ topic }}</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 800px; margin: 40px auto; color: #222; line-height: 1.6; }
+    h1 { font-size: 2em; border-bottom: 2px solid #333; padding-bottom: 0.25em; }
+    h2 { font-size: 1.4em; margin-top: 1.5em; color: #444; }
+    .meta { font-size: 0.9em; color: #666; margin-bottom: 1em; }
+    .argument { margin: 0.75em 0; padding: 0.5em 0.75em; border-left: 3px solid #5b9bd5; }
+    .argument.opposing { border-left-color: #c0392b; }
+    .argument.neutral  { border-left-color: #888; }
+    .stance { font-weight: bold; font-size: 0.85em; text-transform: uppercase; color: #5b9bd5; }
+    .stance.opposing { color: #c0392b; }
+    .stance.neutral  { color: #888; }
+    .evidence-ids { font-size: 0.8em; color: #777; }
+    table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+    th, td { border: 1px solid #ccc; padding: 0.5em 0.75em; text-align: left; }
+    th { background: #f4f4f4; }
+    ul { padding-left: 1.5em; }
+    .gap { margin: 0.25em 0; }
+    .confidence { font-style: italic; color: #555; margin-top: 2em; }
+  </style>
+</head>
+<body>
+
+<h1>{{ topic }}</h1>
+<p class="meta">Generated research brief</p>
+
+<h2>Executive Summary</h2>
+<p>{{ executive_summary }}</p>
+
+{% if key_arguments %}
+<h2>Key Arguments</h2>
+{% for arg in key_arguments %}
+<div class="argument {{ arg.stance }}">
+  <span class="stance {{ arg.stance }}">{{ arg.stance }}</span>
+  <p>{{ arg.claim }}</p>
+  {% if arg.evidence_chunk_ids %}
+  <p class="evidence-ids">Evidence: {{ arg.evidence_chunk_ids | join(", ") }}</p>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if evidence_table %}
+<h2>Evidence Table</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Document</th>
+      <th>Key Point</th>
+      <th>Chunk ID</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for row in evidence_table %}
+    <tr>
+      <td>{{ row.document_title }}</td>
+      <td>{{ row.key_point }}</td>
+      <td><code>{{ row.chunk_id }}</code></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if counterarguments %}
+<h2>Counterarguments</h2>
+{% for arg in counterarguments %}
+<div class="argument opposing">
+  <span class="stance opposing">opposing</span>
+  <p>{{ arg.claim }}</p>
+  {% if arg.evidence_chunk_ids %}
+  <p class="evidence-ids">Evidence: {{ arg.evidence_chunk_ids | join(", ") }}</p>
+  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if knowledge_gaps %}
+<h2>Knowledge Gaps</h2>
+<ul>
+  {% for gap in knowledge_gaps %}
+  <li class="gap">{{ gap }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if recommended_reading %}
+<h2>Recommended Reading</h2>
+<ul>
+  {% for item in recommended_reading %}
+  <li><strong>{{ item.document_title }}</strong> &mdash; {{ item.reason }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<p class="confidence">Confidence: {{ (confidence * 100) | round(0) | int }}%</p>
+
+</body>
+</html>

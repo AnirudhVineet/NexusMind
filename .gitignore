@@ -1,0 +1,176 @@
+# ──────────────────────────────────────────────────────────────────────────
+# Secrets — NEVER commit
+# ──────────────────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+*.pem
+*.key
+secrets/
+
+# Keep example templates so collaborators know the env-var contract
+!.env.example
+!*.example
+
+# ──────────────────────────────────────────────────────────────────────────
+# Python
+# ──────────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+backend/.venv/
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+wheels/
+pip-wheel-metadata/
+.installed.cfg
+MANIFEST
+
+# Test + lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# ──────────────────────────────────────────────────────────────────────────
+# Node / Next.js / TypeScript
+# ──────────────────────────────────────────────────────────────────────────
+node_modules/
+.next/
+.turbo/
+.vercel/
+out/
+.cache/
+
+# Auto-generated
+next-env.d.ts
+*.tsbuildinfo
+
+# Package-manager debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ──────────────────────────────────────────────────────────────────────────
+# Runtime artifacts (logs, uploads, scratch, models)
+# ──────────────────────────────────────────────────────────────────────────
+logs/
+*.log
+*.log.*
+
+# User-uploaded documents, generated audio/video, ML model weights —
+# regenerated per environment, never belong in the repo.
+# Matches data/ at any depth (catches both ./data and ./backend/data).
+data/
+
+# Lockfiles created at runtime by the model-downloader
+models.lock
+
+# Local Sqlite / generated database files
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# ──────────────────────────────────────────────────────────────────────────
+# Sample PDFs / HTML / binary noise at repo root
+# ──────────────────────────────────────────────────────────────────────────
+PDFs/
+Prompt/*.pdf
+Prompt/*.html
+Prompt/*.docx
+Prompt/* WhatsApp_files/
+Prompt/(*) WhatsApp_files/
+
+# Keep planning docs (Prompt/*.md) — they're useful provenance.
+
+# Loose sample artifacts at repo root only (leading slash anchors to root)
+/sample.wav
+/*.mp3
+/*.mp4
+/*.wav
+/*.m4a
+
+# ──────────────────────────────────────────────────────────────────────────
+# OS noise
+# ──────────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# OneDrive sync conflicts
+*-OneDrive-conflict-*
+*-conflict-*
+
+# ──────────────────────────────────────────────────────────────────────────
+# Editor / IDE
+# ──────────────────────────────────────────────────────────────────────────
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+.vim/
+
+# VS Code — track shared settings only (delete the negation if you want
+# the whole folder ignored).
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# JetBrains
+.fleet/
+
+# ──────────────────────────────────────────────────────────────────────────
+# Tool workspaces / AI scratch
+# ──────────────────────────────────────────────────────────────────────────
+.claude/
+.cursor/
+.aider*
+.continue/
+
+# ──────────────────────────────────────────────────────────────────────────
+# Misc
+# ──────────────────────────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.temp
+.tmp/
+tmp/
+
+# Local-only worker / process lists
+logs/workers/pids.txt

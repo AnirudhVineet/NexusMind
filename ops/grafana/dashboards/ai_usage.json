@@ -1,0 +1,86 @@
+{
+  "uid": "nexusmind-ai-usage",
+  "title": "NexusMind — AI Usage",
+  "tags": ["nexusmind"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "1m",
+  "time": { "from": "now-24h", "to": "now" },
+  "templating": { "list": [] },
+  "annotations": { "list": [] },
+  "panels": [
+    {
+      "id": 1,
+      "title": "LLM Tokens (1h increase)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (provider, direction) (increase(nexusmind_llm_tokens_total[1h]))",
+          "legendFormat": "{{provider}} · {{direction}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "LLM Requests (rate / 5m)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (provider, model) (rate(nexusmind_llm_requests_total[5m]))",
+          "legendFormat": "{{provider}} · {{model}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Ollama Throughput p50 (tokens/s)",
+      "type": "timeseries",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.50, sum by (le, task) (rate(nexusmind_ollama_tokens_per_second_bucket[5m])))",
+          "legendFormat": "{{task}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Total LLM Tokens",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" } }, "overrides": [] },
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        { "refId": "A", "expr": "sum(nexusmind_llm_tokens_total)" }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Total LLM Requests",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "nexusmind-prometheus" },
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 8 },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" } }, "overrides": [] },
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "targets": [
+        { "refId": "A", "expr": "sum(nexusmind_llm_requests_total)" }
+      ]
+    }
+  ]
+}

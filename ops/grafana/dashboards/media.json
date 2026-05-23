@@ -1,0 +1,75 @@
+{
+  "title": "NexusMind — Media Production",
+  "uid": "nm-media",
+  "schemaVersion": 39,
+  "version": 1,
+  "tags": ["nexusmind", "phase5", "media"],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Media jobs by status (last 6h)",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "sum by (status) (increase(nexusmind_media_jobs_total[6h]))",
+          "legendFormat": "{{status}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Reel render p95 duration",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(nexusmind_media_job_duration_seconds_bucket{job_type=\"reel\"}[10m])))",
+          "legendFormat": "reel p95"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(nexusmind_media_job_duration_seconds_bucket{job_type=\"reel\"}[10m])))",
+          "legendFormat": "reel p50"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Visual provider success rate",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 6, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "sum by (provider) (rate(nexusmind_visual_provider_calls_total{status=\"ok\"}[5m])) / clamp_min(sum by (provider) (rate(nexusmind_visual_provider_calls_total[5m])), 0.001)",
+          "legendFormat": "{{provider}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Daily estimated spend by provider",
+      "type": "stat",
+      "gridPos": { "x": 12, "y": 6, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "sum by (provider) (increase(nexusmind_media_cost_usd_total[24h]))",
+          "legendFormat": "{{provider}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Per-user disk usage (top 10)",
+      "type": "table",
+      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 8 },
+      "targets": [
+        {
+          "expr": "topk(10, nexusmind_media_disk_used_bytes)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+Terminal 1 — FastAPI backend
+
+cd C:\Users\aniru\OneDrive\Desktop\Projects\NexusMind
+.\scripts\start-api.ps1
+
+Terminal 2 — Celery workers (hidden, logs to logs\workers\)
+
+cd C:\Users\aniru\OneDrive\Desktop\Projects\NexusMind
+.\scripts\start-worker.ps1
+
+Terminal 3 — Frontend
+
+cd C:\Users\aniru\OneDrive\Desktop\Projects\NexusMind
+.\scripts\start-frontend.ps1
+
+--- Worker management ---
+
+Stop all workers:
+Get-Content 'C:\Users\aniru\OneDrive\Desktop\Projects\NexusMind\logs\workers\pids.txt' | ForEach-Object { Stop-Process -Id $_ -Force -EA SilentlyContinue }
+
+Tail a worker log (e.g. NM-llm):
+Get-Content 'C:\Users\aniru\OneDrive\Desktop\Projects\NexusMind\logs\workers\NM-llm.log' -Wait -Tail 50
+
+Available logs: NM-fast, NM-ner, NM-llm, NM-nli, NM-misc, NM-memory, NM-research, NM-phase4
+
+--- Database migrations ---
+
+cd C:\Users\aniru\OneDrive\Desktop\Projects\NexusMind\backend
+.\.venv\Scripts\alembic.exe upgrade head
+
