@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { listVoices, type VoiceInfo } from "@/services/media";
@@ -59,14 +59,14 @@ export default function VoiceSettingsPage() {
     <div className="max-w-xl space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">Voice Settings</h1>
-        <p className="text-muted text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Choose a default narrator voice. This applies to brief narrations,
           reel TTS, and any future audio-rendered output.
         </p>
       </header>
 
       <div className="space-y-2">
-        <label className="text-xs uppercase text-muted">Default voice</label>
+        <label className="text-xs uppercase text-muted-foreground">Default voice</label>
         <select
           className="w-full bg-background border border-border rounded px-3 py-2"
           value={voiceId}
@@ -82,7 +82,7 @@ export default function VoiceSettingsPage() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-xs uppercase text-muted">
+        <label className="text-xs uppercase text-muted-foreground">
           Speed ({speed.toFixed(2)}×)
         </label>
         <input
@@ -100,7 +100,7 @@ export default function VoiceSettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-4 py-2 rounded bg-accent text-accent-foreground disabled:opacity-50"
+          className="px-4 py-2 rounded bg-accent text-primary-foreground disabled:opacity-50"
         >
           {saving ? "Saving…" : "Save"}
         </button>

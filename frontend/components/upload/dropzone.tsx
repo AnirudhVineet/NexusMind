@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useDropzone } from "react-dropzone";
 
@@ -40,7 +40,7 @@ export function DropZone({ onFiles, disabled }: Props) {
       <p className="text-base font-medium">
         {isDragActive ? "Drop to upload" : "Drag & drop, or click to choose files"}
       </p>
-      <p className="text-xs text-muted mt-2">PDF, TXT, or MD · up to 50 MB</p>
+      <p className="text-xs text-muted-foreground mt-2">PDF, TXT, or MD · up to 50 MB</p>
       {fileRejections.length > 0 && (
         <ul className="mt-3 text-sm text-red-400">
           {fileRejections.map(({ file, errors }) => (

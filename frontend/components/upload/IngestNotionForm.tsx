@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,7 @@ export function IngestNotionForm({ onSuccess, onError }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <div>
-        <label className="block text-xs text-muted mb-1">Notion Page ID</label>
+        <label className="block text-xs text-muted-foreground mb-1">Notion Page ID</label>
         <input
           value={pageId}
           onChange={(e) => setPageId(e.target.value)}
@@ -55,9 +55,9 @@ export function IngestNotionForm({ onSuccess, onError }: Props) {
         />
       </div>
       <div>
-        <label className="block text-xs text-muted mb-1">
+        <label className="block text-xs text-muted-foreground mb-1">
           Access token{" "}
-          <span className="text-muted/60">(leave blank to use .env value)</span>
+          <span className="text-muted-foreground/60">(leave blank to use .env value)</span>
         </label>
         <input
           type="password"

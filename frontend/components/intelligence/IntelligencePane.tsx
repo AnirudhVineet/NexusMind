@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,20 +31,20 @@ export function IntelligencePane({ documentId }: Props) {
         </Button>
       </header>
 
-      {isLoading && <p className="text-sm text-muted">Loading…</p>}
+      {isLoading && <p className="text-sm text-muted-foreground">Loading…</p>}
       {error && (
         <p className="text-sm text-red-400">Failed to load intelligence.</p>
       )}
 
       {empty && !isLoading && (
-        <p className="text-sm text-muted">
+        <p className="text-sm text-muted-foreground">
           Pending — the background worker hasn't finished this document yet.
         </p>
       )}
 
       {data?.abstract && (
         <div>
-          <h3 className="text-xs uppercase tracking-wider text-muted mb-1">
+          <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
             Abstract
           </h3>
           <p className="text-sm">{data.abstract}</p>
@@ -53,7 +53,7 @@ export function IntelligencePane({ documentId }: Props) {
 
       {data?.summary && data.summary.length > 0 && (
         <div>
-          <h3 className="text-xs uppercase tracking-wider text-muted mb-1">
+          <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
             Summary
           </h3>
           <ul className="text-sm list-disc list-inside space-y-1">
@@ -66,7 +66,7 @@ export function IntelligencePane({ documentId }: Props) {
 
       {data?.deep_dive && (
         <details>
-          <summary className="text-xs uppercase tracking-wider text-muted cursor-pointer">
+          <summary className="text-xs uppercase tracking-wider text-muted-foreground cursor-pointer">
             Deep dive
           </summary>
           <div className="text-sm whitespace-pre-wrap mt-2">
@@ -77,7 +77,7 @@ export function IntelligencePane({ documentId }: Props) {
 
       {data?.key_insights && data.key_insights.length > 0 && (
         <div>
-          <h3 className="text-xs uppercase tracking-wider text-muted mb-1">
+          <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
             Key insights
           </h3>
           <ul className="text-sm space-y-2">
@@ -87,7 +87,7 @@ export function IntelligencePane({ documentId }: Props) {
                 className="border border-border rounded p-2 text-xs"
               >
                 <p>{k.claim}</p>
-                <p className="text-muted mt-1">
+                <p className="text-muted-foreground mt-1">
                   confidence {k.confidence.toFixed(2)}
                 </p>
               </li>
@@ -98,7 +98,7 @@ export function IntelligencePane({ documentId }: Props) {
 
       {data?.tags && data.tags.length > 0 && (
         <div>
-          <h3 className="text-xs uppercase tracking-wider text-muted mb-1">
+          <h3 className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
             Topic tags
           </h3>
           <div className="flex flex-wrap gap-1">
@@ -117,19 +117,19 @@ export function IntelligencePane({ documentId }: Props) {
       {data?.metrics && (
         <div className="grid grid-cols-3 gap-3 text-xs">
           <div className="border border-border rounded p-2">
-            <p className="text-muted">FK grade</p>
+            <p className="text-muted-foreground">FK grade</p>
             <p className="text-sm font-medium">
               {data.metrics.flesch_kincaid_grade.toFixed(1)}
             </p>
           </div>
           <div className="border border-border rounded p-2">
-            <p className="text-muted">Reading</p>
+            <p className="text-muted-foreground">Reading</p>
             <p className="text-sm font-medium">
               {data.metrics.reading_minutes} min
             </p>
           </div>
           <div className="border border-border rounded p-2">
-            <p className="text-muted">Jargon</p>
+            <p className="text-muted-foreground">Jargon</p>
             <p className="text-sm font-medium">
               {(data.metrics.jargon_density * 100).toFixed(1)}%
             </p>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { listShareLinks, revokeShareLink, type ShareLink } from "@/services/publish";
@@ -38,15 +38,15 @@ export default function SharesPage() {
     <div className="space-y-4">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">Shared Links</h1>
-        <button onClick={refresh} className="text-sm text-accent hover:underline">
+        <button onClick={refresh} className="text-sm text-primary hover:underline">
           Refresh
         </button>
       </header>
       {err && <p className="text-red-400 text-sm">{err}</p>}
       {loading ? (
-        <p className="text-muted text-sm">Loading…</p>
+        <p className="text-muted-foreground text-sm">Loading…</p>
       ) : links.length === 0 ? (
-        <p className="text-muted text-sm">
+        <p className="text-muted-foreground text-sm">
           You haven&apos;t shared anything yet. Use the "Share" button on a
           Studio or Research output to create one.
         </p>
@@ -67,7 +67,7 @@ export default function SharesPage() {
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-mono truncate">{url}</p>
-                  <p className="text-xs text-muted">
+                  <p className="text-xs text-muted-foreground">
                     {l.target_type} · views: {l.view_count} · expires: {expiry}
                     {l.has_password && " · 🔒"}
                   </p>

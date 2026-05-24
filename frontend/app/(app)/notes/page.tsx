@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 
@@ -61,7 +61,7 @@ export default function NotesPage() {
       <header className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">Notes</h1>
-          <p className="text-muted text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             Highlights and notes across your library. Select text on a document
             page to add new ones.
           </p>
@@ -114,10 +114,10 @@ export default function NotesPage() {
       )}
 
       {isLoading ? (
-        <p className="text-muted text-sm">Loading…</p>
+        <p className="text-muted-foreground text-sm">Loading…</p>
       ) : filtered.length === 0 ? (
         <div className="bg-surface border border-border rounded-xl p-8 text-center">
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             {data?.length
               ? "No annotations match the current filters."
               : "No annotations yet. Open a document and select text to highlight it."}

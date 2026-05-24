@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
@@ -44,7 +44,7 @@ export function QuotaStrip() {
     <div className="flex flex-wrap items-center gap-3 text-xs">
       {Object.entries(data.by_type).map(([type, q]) => {
         const pct = q.cap > 0 ? Math.round((q.current / q.cap) * 100) : 0;
-        const color = pct >= 90 ? "text-red-400" : pct >= 70 ? "text-amber-400" : "text-muted";
+        const color = pct >= 90 ? "text-red-400" : pct >= 70 ? "text-amber-400" : "text-muted-foreground";
         return (
           <span key={type} className={color}>
             {type}: {q.current}/{q.cap}
@@ -57,12 +57,12 @@ export function QuotaStrip() {
             ? "text-red-400"
             : diskPct >= 70
               ? "text-amber-400"
-              : "text-muted"
+              : "text-muted-foreground"
         }
       >
         disk: {(data.disk.used_bytes / 1024 / 1024).toFixed(0)} MB / {(data.disk.cap_bytes / 1024 / 1024 / 1024).toFixed(1)} GB ({diskPct}%)
       </span>
-      <span className="text-muted">
+      <span className="text-muted-foreground">
         today: ${data.cost_today_usd.toFixed(4)}
       </span>
     </div>

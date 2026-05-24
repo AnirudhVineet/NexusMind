@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -18,7 +18,7 @@ export function CitationChip({ citation }: { citation: Citation }) {
       {open && (
         <div className="absolute z-20 left-0 mt-1 w-80 bg-surface border border-border rounded-md p-3 shadow-lg text-left">
           <p className="text-sm font-medium truncate">{citation.document_title}</p>
-          <p className="text-xs text-muted mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {citation.page_number != null ? `Page ${citation.page_number}` : "—"}
             {citation.section ? ` · ${citation.section}` : ""}
           </p>

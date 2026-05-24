@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -54,7 +54,7 @@ export default function SignUpPage() {
       >
         <div>
           <h1 className="text-xl font-semibold">Create account</h1>
-          <p className="text-muted text-sm mt-1">Start ingesting documents in seconds.</p>
+          <p className="text-muted-foreground text-sm mt-1">Start ingesting documents in seconds.</p>
         </div>
         <div className="space-y-2">
           <label className="text-sm">Email</label>
@@ -74,15 +74,15 @@ export default function SignUpPage() {
             required
             minLength={8}
           />
-          <p className="text-xs text-muted">At least 8 characters.</p>
+          <p className="text-xs text-muted-foreground">At least 8 characters.</p>
         </div>
         {error && <p className="text-sm text-red-400">{error}</p>}
         <Button type="submit" disabled={submitting} className="w-full">
           {submitting ? "Creating…" : "Create account"}
         </Button>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/sign-in" className="text-accent hover:underline">
+          <Link href="/sign-in" className="text-primary hover:underline">
             Sign in
           </Link>
         </p>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useCallback, useEffect, useMemo, type ReactNode } from "react";
 import { useContentLibrary, useGenerateContent, useContentItem } from "@/hooks/useContent";
@@ -43,13 +43,13 @@ function MemePreview({ id, hasFile }: { id: string; hasFile: boolean }) {
 
   if (!hasFile) {
     return (
-      <div className="bg-background border border-border rounded-lg p-6 text-center text-muted text-xs">
+      <div className="bg-background border border-border rounded-lg p-6 text-center text-muted-foreground text-xs">
         Meme image hasn&apos;t been rendered yet (no matching template was found).
       </div>
     );
   }
   if (error) return <p className="text-red-400 text-xs">{error}</p>;
-  if (!url) return <p className="text-muted text-xs">Loading image…</p>;
+  if (!url) return <p className="text-muted-foreground text-xs">Loading image…</p>;
   return (
     <div className="bg-background border border-border rounded-lg p-3 flex justify-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -92,7 +92,7 @@ function HashtagList({ tags }: { tags: any }) {
         const label = typeof t === "string" ? t : String(t ?? "");
         const text = label.startsWith("#") ? label : `#${label}`;
         return (
-          <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">
+          <span key={i} className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-primary border border-accent/20">
             {text}
           </span>
         );
@@ -104,7 +104,7 @@ function HashtagList({ tags }: { tags: any }) {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div className="space-y-2">
-      <h3 className="text-xs font-medium text-muted uppercase tracking-wide">{title}</h3>
+      <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{title}</h3>
       {children}
     </div>
   );
@@ -139,7 +139,7 @@ function RichContentView({ type, content }: { type: string; content: any }) {
             <ol className="space-y-2">
               {beats.map((b: any, i: number) => (
                 <li key={i} className="flex gap-3 text-sm">
-                  <span className="text-accent font-medium shrink-0">{i + 1}.</span>
+                  <span className="text-primary font-medium shrink-0">{i + 1}.</span>
                   <span className="leading-relaxed">{b?.text ?? String(b ?? "")}</span>
                 </li>
               ))}
@@ -176,8 +176,8 @@ function RichContentView({ type, content }: { type: string; content: any }) {
             return (
               <li key={i} className="bg-background border border-border rounded-lg p-3">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs text-accent font-medium">Post {idx}</span>
-                  <span className="text-xs text-muted">{text.length} chars</span>
+                  <span className="text-xs text-primary font-medium">Post {idx}</span>
+                  <span className="text-xs text-muted-foreground">{text.length} chars</span>
                 </div>
                 <p className="text-sm whitespace-pre-wrap leading-relaxed">{text}</p>
               </li>
@@ -196,26 +196,26 @@ function RichContentView({ type, content }: { type: string; content: any }) {
           {frames.map((f: any, i: number) => (
             <li key={i} className="bg-background border border-border rounded-lg p-3 space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-accent font-medium">
+                <span className="text-xs text-primary font-medium">
                   Frame {f?.index ?? i + 1}
                 </span>
                 {f?.duration_seconds != null && (
-                  <span className="text-xs text-muted">{f.duration_seconds}s</span>
+                  <span className="text-xs text-muted-foreground">{f.duration_seconds}s</span>
                 )}
               </div>
               {f?.narration && (
                 <p className="text-sm leading-relaxed">
-                  <span className="text-muted">Narration: </span>{f.narration}
+                  <span className="text-muted-foreground">Narration: </span>{f.narration}
                 </p>
               )}
               {f?.visual && (
                 <p className="text-sm leading-relaxed">
-                  <span className="text-muted">Visual: </span>{f.visual}
+                  <span className="text-muted-foreground">Visual: </span>{f.visual}
                 </p>
               )}
               {f?.audio_note && (
                 <p className="text-sm leading-relaxed">
-                  <span className="text-muted">Audio: </span>{f.audio_note}
+                  <span className="text-muted-foreground">Audio: </span>{f.audio_note}
                 </p>
               )}
             </li>
@@ -231,7 +231,7 @@ function RichContentView({ type, content }: { type: string; content: any }) {
         {content.caption && (
           <Section title="Caption">
             <p className="text-sm leading-relaxed whitespace-pre-wrap">{content.caption}</p>
-            <p className="text-xs text-muted">{String(content.caption).length} characters</p>
+            <p className="text-xs text-muted-foreground">{String(content.caption).length} characters</p>
           </Section>
         )}
         {Array.isArray(content.hashtags) && content.hashtags.length > 0 && (
@@ -247,17 +247,17 @@ function RichContentView({ type, content }: { type: string; content: any }) {
     return (
       <div className="space-y-3 text-sm">
         {content.template_name && (
-          <p><span className="text-muted">Template: </span>{content.template_name}</p>
+          <p><span className="text-muted-foreground">Template: </span>{content.template_name}</p>
         )}
         {content.top_text && (
-          <p><span className="text-muted">Top: </span>{content.top_text}</p>
+          <p><span className="text-muted-foreground">Top: </span>{content.top_text}</p>
         )}
         {content.bottom_text && (
-          <p><span className="text-muted">Bottom: </span>{content.bottom_text}</p>
+          <p><span className="text-muted-foreground">Bottom: </span>{content.bottom_text}</p>
         )}
         {Array.isArray(content.alt_panel_texts) && content.alt_panel_texts.length > 0 && (
           <div>
-            <p className="text-muted">Panels:</p>
+            <p className="text-muted-foreground">Panels:</p>
             <ol className="list-decimal list-inside space-y-0.5 ml-2">
               {content.alt_panel_texts.map((t: any, i: number) => (
                 <li key={i}>{String(t)}</li>
@@ -266,7 +266,7 @@ function RichContentView({ type, content }: { type: string; content: any }) {
           </div>
         )}
         {content.caption && (
-          <p><span className="text-muted">Caption: </span>{content.caption}</p>
+          <p><span className="text-muted-foreground">Caption: </span>{content.caption}</p>
         )}
       </div>
     );
@@ -353,7 +353,7 @@ function ContentPreview({ item }: { item: GeneratedContent }) {
       <div className="flex items-center justify-between">
         <h2 className="text-base font-medium">
           {typeInfo?.icon} {typeInfo?.label ?? display.content_type}
-          <span className="text-xs text-muted ml-2">· {display.style}</span>
+          <span className="text-xs text-muted-foreground ml-2">· {display.style}</span>
         </h2>
         <span className={`text-xs px-2 py-0.5 rounded-full border ${FIDELITY_COLORS[badge.color]}`}>
           {badge.label}
@@ -361,7 +361,7 @@ function ContentPreview({ item }: { item: GeneratedContent }) {
       </div>
 
       {display.status !== "complete" && display.status !== "failed" && (
-        <div className="bg-accent/10 border border-accent/30 rounded px-3 py-2 text-sm text-accent animate-pulse">
+        <div className="bg-accent/10 border border-accent/30 rounded px-3 py-2 text-sm text-primary animate-pulse">
           {display.status}…
         </div>
       )}
@@ -374,7 +374,7 @@ function ContentPreview({ item }: { item: GeneratedContent }) {
         <>
           <RichContentView type={display.content_type} content={display.content_json} />
           <details>
-            <summary className="text-xs text-muted cursor-pointer hover:text-white mt-2">
+            <summary className="text-xs text-muted-foreground cursor-pointer hover:text-white mt-2">
               View raw JSON
             </summary>
             <pre className="bg-background border border-border rounded p-4 text-xs overflow-auto max-h-96 whitespace-pre-wrap mt-2">
@@ -386,7 +386,7 @@ function ContentPreview({ item }: { item: GeneratedContent }) {
 
       {display.fidelity_flags?.length > 0 && (
         <div className="space-y-1.5">
-          <h3 className="text-xs font-medium text-muted uppercase tracking-wide">Fidelity Flags</h3>
+          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Fidelity Flags</h3>
           {display.fidelity_flags.map((flag: any, i: number) => (
             <div key={i} className={`text-xs px-3 py-1.5 rounded border ${flag.pass ? FIDELITY_COLORS.green : FIDELITY_COLORS.red}`}>
               <span className="font-medium">{flag.label}</span>: sim={flag.max_sim?.toFixed(3)} {flag.pass ? "✓" : "✗"}
@@ -399,25 +399,25 @@ function ContentPreview({ item }: { item: GeneratedContent }) {
         <div className="flex gap-2 flex-wrap">
           {(["txt", "docx", "json"] as const).map(f => (
             <button key={f} onClick={() => handleExport(f)}
-              className="text-xs px-2.5 py-1 rounded border border-border text-muted hover:text-white">
+              className="text-xs px-2.5 py-1 rounded border border-border text-muted-foreground hover:text-white">
               .{f}
             </button>
           ))}
           {display.content_type === "meme" && display.file_path && (
             <button onClick={handleImageDownload}
-              className="text-xs px-2.5 py-1 rounded border border-border text-muted hover:text-white">
+              className="text-xs px-2.5 py-1 rounded border border-border text-muted-foreground hover:text-white">
               PNG
             </button>
           )}
           <button
             onClick={() => copyToClipboard(readableExportText(display.content_type, display.content_json))}
-            className="text-xs px-2.5 py-1 rounded border border-border text-muted hover:text-white"
+            className="text-xs px-2.5 py-1 rounded border border-border text-muted-foreground hover:text-white"
           >
             Copy text
           </button>
           <button
             onClick={() => copyToClipboard(JSON.stringify(display.content_json, null, 2))}
-            className="text-xs px-2.5 py-1 rounded border border-border text-muted hover:text-white"
+            className="text-xs px-2.5 py-1 rounded border border-border text-muted-foreground hover:text-white"
           >
             Copy JSON
           </button>
@@ -508,7 +508,7 @@ const JOB_STATUS_BADGE: Record<JobStatus, string> = {
   finalizing: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30 animate-pulse",
   complete: "bg-green-500/20 text-green-400 border-green-500/30",
   failed: "bg-red-500/20 text-red-400 border-red-500/30",
-  canceled: "bg-muted/20 text-muted border-border",
+  canceled: "bg-muted/20 text-muted-foreground border-border",
 };
 
 const JOB_TERMINAL = new Set<JobStatus>(["complete", "failed", "canceled"]);
@@ -579,7 +579,7 @@ function MediaJobCard({
 
       <div>
         <p className="text-sm font-medium truncate">{meta.label}</p>
-        <p className="text-xs text-muted mt-0.5">
+        <p className="text-xs text-muted-foreground mt-0.5">
           {created.toLocaleDateString()}
           {job.duration_seconds != null && <> · {job.duration_seconds.toFixed(1)}s</>}
           {job.output_size_bytes != null && (
@@ -590,7 +590,7 @@ function MediaJobCard({
           <a
             href={`/research?brief=${job.params.brief_id}`}
             onClick={(e) => e.stopPropagation()}
-            className="text-xs text-accent hover:underline mt-1 inline-block"
+            className="text-xs text-primary hover:underline mt-1 inline-block"
           >
             View source brief →
           </a>
@@ -617,7 +617,7 @@ function MediaJobCard({
           {previewError ? (
             <p className="text-xs text-red-400">{previewError}</p>
           ) : !blobUrl ? (
-            <p className="text-xs text-muted">Loading preview…</p>
+            <p className="text-xs text-muted-foreground">Loading preview…</p>
           ) : job.job_type === "reel" ? (
             <video
               src={blobUrl}
@@ -635,7 +635,7 @@ function MediaJobCard({
               href={blobUrl}
               target="_blank"
               rel="noreferrer"
-              className="text-xs text-accent underline"
+              className="text-xs text-primary underline"
             >
               Open in new tab →
             </a>
@@ -648,13 +648,13 @@ function MediaJobCard({
           <>
             <button
               onClick={() => setPreviewOpen((v) => !v)}
-              className="text-xs text-accent hover:underline"
+              className="text-xs text-primary hover:underline"
             >
               {previewOpen ? "Hide" : "Preview"}
             </button>
             <button
               onClick={handleDownload}
-              className="text-xs text-accent hover:underline"
+              className="text-xs text-primary hover:underline"
             >
               Download
             </button>
@@ -696,7 +696,7 @@ function VariantsTab({ selectedId }: { selectedId: string | null }) {
   if (!selectedId || !baseItem) {
     return (
       <div className="bg-surface border border-border rounded-lg p-12 text-center">
-        <p className="text-muted text-sm">Select a content item from the Library tab to generate variants.</p>
+        <p className="text-muted-foreground text-sm">Select a content item from the Library tab to generate variants.</p>
       </div>
     );
   }
@@ -706,7 +706,7 @@ function VariantsTab({ selectedId }: { selectedId: string | null }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted">Comparing <span className="text-white">{allItems.length}</span> version{allItems.length !== 1 ? "s" : ""}</p>
+        <p className="text-sm text-muted-foreground">Comparing <span className="text-white">{allItems.length}</span> version{allItems.length !== 1 ? "s" : ""}</p>
         <button
           onClick={handleGenerateVariants}
           disabled={generating}
@@ -724,7 +724,7 @@ function VariantsTab({ selectedId }: { selectedId: string | null }) {
           return (
             <div key={item.id} className="bg-surface border border-border rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-muted uppercase">{i === 0 ? "Original" : `Variant ${i}`}</span>
+                <span className="text-xs font-medium text-muted-foreground uppercase">{i === 0 ? "Original" : `Variant ${i}`}</span>
                 <span className={`text-xs px-2 py-0.5 rounded-full border ${FIDELITY_COLORS[badge.color]}`}>
                   {badge.label}
                 </span>
@@ -734,7 +734,7 @@ function VariantsTab({ selectedId }: { selectedId: string | null }) {
               </div>
               <button
                 onClick={() => copyToClipboard(readable)}
-                className="text-xs px-2.5 py-1 rounded border border-border text-muted hover:text-white"
+                className="text-xs px-2.5 py-1 rounded border border-border text-muted-foreground hover:text-white"
               >
                 Copy to clipboard
               </button>
@@ -791,7 +791,7 @@ export default function StudioPage() {
       <header className="space-y-2">
         <div>
           <h1 className="text-2xl font-semibold">Content Studio</h1>
-          <p className="text-muted text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             AI-generated content from your knowledge base. Create, edit, and export.
           </p>
         </div>
@@ -805,8 +805,8 @@ export default function StudioPage() {
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
               tab === t.key
-                ? "border-accent text-accent"
-                : "border-transparent text-muted hover:text-foreground"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
             }`}
           >
             {t.label}
@@ -825,8 +825,8 @@ export default function StudioPage() {
                   onClick={() => setLibraryFilter(f.value)}
                   className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                     active
-                      ? "bg-accent/15 border-accent text-accent"
-                      : "bg-surface border-border text-muted hover:text-white hover:border-accent/40"
+                      ? "bg-accent/15 border-primary text-primary"
+                      : "bg-surface border-border text-muted-foreground hover:text-white hover:border-accent/40"
                   }`}
                 >
                   <span className="mr-1">{f.icon}</span>
@@ -837,18 +837,18 @@ export default function StudioPage() {
           </div>
 
           {libraryLoading && mergedItems.length === 0 ? (
-            <p className="text-muted text-sm">Loading…</p>
+            <p className="text-muted-foreground text-sm">Loading…</p>
           ) : libraryError ? (
             <p className="text-red-400 text-sm">{libraryError}</p>
           ) : mergedItems.length === 0 ? (
             <div className="bg-surface border border-border rounded-lg p-12 text-center">
-              <p className="text-muted text-sm">
+              <p className="text-muted-foreground text-sm">
                 {libraryFilter === "all"
                   ? "No generated content yet."
                   : `No items match "${LIBRARY_FILTERS.find((f) => f.value === libraryFilter)?.label}".`}
               </p>
               {libraryFilter === "all" && (
-                <p className="text-muted text-xs mt-2">
+                <p className="text-muted-foreground text-xs mt-2">
                   Use the &quot;Repurpose&quot; button on any document in the Library.
                 </p>
               )}
@@ -897,7 +897,7 @@ export default function StudioPage() {
                       <p className="text-sm font-medium truncate">
                         {typeInfo?.label ?? item.content_type}
                       </p>
-                      <p className="text-xs text-muted mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5">
                         Style: {item.style} · {new Date(item.created_at).toLocaleDateString()}
                       </p>
                     </div>
@@ -906,7 +906,7 @@ export default function StudioPage() {
                         <a
                           href={`/studio/${item.id}/${item.content_type === "reel_script" ? "reel" : "thread"}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="text-xs text-accent hover:underline"
+                          className="text-xs text-primary hover:underline"
                         >
                           Open editor →
                         </a>
@@ -917,7 +917,7 @@ export default function StudioPage() {
                           setSelectedId(item.id);
                           setTab("variants");
                         }}
-                        className="text-xs text-accent hover:underline"
+                        className="text-xs text-primary hover:underline"
                       >
                         Variants
                       </button>
@@ -944,7 +944,7 @@ export default function StudioPage() {
           {selectedItem ? (
             <ContentPreview item={selectedItem} />
           ) : (
-            <p className="text-muted text-sm text-center py-12">
+            <p className="text-muted-foreground text-sm text-center py-12">
               Select a content item from the Library tab to view it here.
             </p>
           )}

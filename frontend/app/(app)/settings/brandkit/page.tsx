@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import {
@@ -79,7 +79,7 @@ export default function BrandKitPage() {
     });
   }
 
-  if (!kit) return <p className="text-muted text-sm">Loading…</p>;
+  if (!kit) return <p className="text-muted-foreground text-sm">Loading…</p>;
 
   const subtitle = kit.subtitle_style ?? {};
 
@@ -87,7 +87,7 @@ export default function BrandKitPage() {
     <div className="max-w-2xl space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">Brand Kit</h1>
-        <p className="text-muted text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Set a consistent visual identity. Colors, fonts, and watermarks here
           propagate to every reel render, storyboard, and shared OG thumbnail.
         </p>
@@ -104,7 +104,7 @@ export default function BrandKitPage() {
             ["accent_color", "Accent"],
           ].map(([key, label]) => (
             <div key={key}>
-              <label className="text-xs text-muted">{label}</label>
+              <label className="text-xs text-muted-foreground">{label}</label>
               <div className="flex gap-2 items-center">
                 <input
                   type="color"
@@ -132,7 +132,7 @@ export default function BrandKitPage() {
         <h2 className="text-sm font-semibold">Fonts</h2>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="text-xs text-muted">Heading font</label>
+            <label className="text-xs text-muted-foreground">Heading font</label>
             <input
               type="text"
               value={kit.font_heading ?? ""}
@@ -142,7 +142,7 @@ export default function BrandKitPage() {
             />
           </div>
           <div>
-            <label className="text-xs text-muted">Body font</label>
+            <label className="text-xs text-muted-foreground">Body font</label>
             <input
               type="text"
               value={kit.font_body ?? ""}
@@ -177,12 +177,12 @@ export default function BrandKitPage() {
               {watermarkUploading ? "Uploading…" : "Upload watermark image"}
             </button>
             {kit.watermark_asset_id && (
-              <span className="text-xs text-muted">Watermark set ✓</span>
+              <span className="text-xs text-muted-foreground">Watermark set ✓</span>
             )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-muted">
+              <label className="text-xs text-muted-foreground">
                 Opacity ({kit.watermark_opacity.toFixed(2)})
               </label>
               <input
@@ -198,7 +198,7 @@ export default function BrandKitPage() {
               />
             </div>
             <div>
-              <label className="text-xs text-muted">Position</label>
+              <label className="text-xs text-muted-foreground">Position</label>
               <select
                 value={kit.watermark_position}
                 onChange={(e) => update("watermark_position", e.target.value)}
@@ -236,7 +236,7 @@ export default function BrandKitPage() {
             {logoUploading ? "Uploading…" : "Upload logo"}
           </button>
           {kit.logo_asset_id && (
-            <span className="text-xs text-muted">Logo set ✓</span>
+            <span className="text-xs text-muted-foreground">Logo set ✓</span>
           )}
         </div>
       </section>
@@ -261,13 +261,13 @@ export default function BrandKitPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="px-4 py-2 bg-accent text-accent-foreground rounded disabled:opacity-50"
+          className="px-4 py-2 bg-accent text-primary-foreground rounded disabled:opacity-50"
         >
           {saving ? "Saving…" : "Save brand kit"}
         </button>
         <button
           onClick={reset}
-          className="px-4 py-2 border border-border rounded text-muted"
+          className="px-4 py-2 border border-border rounded text-muted-foreground"
         >
           Reset to defaults
         </button>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useToast } from "@/components/toast";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export function DocumentCardsPanel({ documentId }: { documentId: string }) {
       <div className="flex items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold">Flashcards</h2>
-          <p className="text-xs text-muted mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             Spaced-repetition cards generated from this document.
           </p>
         </div>
@@ -42,9 +42,9 @@ export function DocumentCardsPanel({ documentId }: { documentId: string }) {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-muted">Loading…</p>
+        <p className="text-sm text-muted-foreground">Loading…</p>
       ) : !cards || cards.length === 0 ? (
-        <p className="rounded-xl border border-border bg-surface p-5 text-sm text-muted">
+        <p className="rounded-xl border border-border bg-surface p-5 text-sm text-muted-foreground">
           No cards yet. Click “Generate cards” — generation runs in the
           background and may take a minute.
         </p>

@@ -52,7 +52,7 @@ function BeatCard({
   return (
     <div className="bg-surface border border-border rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs uppercase text-accent font-medium">{label}</span>
+        <span className="text-xs uppercase text-primary font-medium">{label}</span>
         {canDelete && (
           <button
             onClick={onDelete}
@@ -71,7 +71,7 @@ function BeatCard({
       />
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className="text-[10px] uppercase text-muted">
+          <label className="text-[10px] uppercase text-muted-foreground">
             On-screen text
           </label>
           <input
@@ -84,7 +84,7 @@ function BeatCard({
           />
         </div>
         <div>
-          <label className="text-[10px] uppercase text-muted">
+          <label className="text-[10px] uppercase text-muted-foreground">
             Duration ({beat.duration_seconds.toFixed(1)}s)
           </label>
           <input
@@ -101,7 +101,7 @@ function BeatCard({
         </div>
       </div>
       <div>
-        <label className="text-[10px] uppercase text-muted">
+        <label className="text-[10px] uppercase text-muted-foreground">
           Visual direction (used for image generation)
         </label>
         <input
@@ -198,11 +198,11 @@ export default function ReelEditorPage() {
     setScript({ ...script, beats: script.beats.filter((_, i) => i !== idx) });
   }
 
-  if (isLoading) return <p className="text-muted text-sm">Loading reel…</p>;
+  if (isLoading) return <p className="text-muted-foreground text-sm">Loading reel…</p>;
   if (loadError) return <p className="text-red-400 text-sm">{loadError}</p>;
   if (!item || item.content_type !== "reel_script") {
     return (
-      <p className="text-muted text-sm">
+      <p className="text-muted-foreground text-sm">
         This content row is not a reel script.
       </p>
     );
@@ -214,17 +214,17 @@ export default function ReelEditorPage() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => router.back()}
-          className="text-accent hover:underline text-sm"
+          className="text-primary hover:underline text-sm"
         >
           ← Back to Studio
         </button>
         <h1 className="text-xl font-semibold flex-1">Reel Editor</h1>
         <span
-          className={`text-xs px-2 py-0.5 rounded border ${overCap ? "border-red-500 text-red-400" : "border-border text-muted"}`}
+          className={`text-xs px-2 py-0.5 rounded border ${overCap ? "border-red-500 text-red-400" : "border-border text-muted-foreground"}`}
         >
           {total.toFixed(1)}s / {MAX_DURATION}s
         </span>
-        <span className="text-xs text-muted">
+        <span className="text-xs text-muted-foreground">
           {state === "saving"
             ? "Saving…"
             : state === "dirty"
@@ -278,14 +278,14 @@ export default function ReelEditorPage() {
       />
 
       <div className="bg-surface border border-border rounded-lg p-3 space-y-2">
-        <label className="text-xs uppercase text-muted">Caption</label>
+        <label className="text-xs uppercase text-muted-foreground">Caption</label>
         <textarea
           rows={3}
           className="w-full bg-background border border-border rounded px-2 py-1.5 text-sm"
           value={script.caption ?? ""}
           onChange={(e) => setScript({ ...script, caption: e.target.value })}
         />
-        <label className="text-xs uppercase text-muted">
+        <label className="text-xs uppercase text-muted-foreground">
           Hashtags (comma separated)
         </label>
         <input
@@ -317,7 +317,7 @@ export default function ReelEditorPage() {
             await flush();
             setModalOpen(true);
           }}
-          className="px-4 py-1.5 text-sm bg-accent text-accent-foreground rounded disabled:opacity-50"
+          className="px-4 py-1.5 text-sm bg-accent text-primary-foreground rounded disabled:opacity-50"
         >
           🎬 Render Video
         </button>

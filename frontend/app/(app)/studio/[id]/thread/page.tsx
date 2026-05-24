@@ -77,15 +77,15 @@ export default function ThreadEditorPage() {
     setPosts(posts.filter((_, i) => i !== idx).map((p, i) => ({ ...p, index: i + 1 })));
   }
 
-  if (isLoading) return <p className="text-muted text-sm">Loading…</p>;
+  if (isLoading) return <p className="text-muted-foreground text-sm">Loading…</p>;
   if (!item || item.content_type !== "thread") {
-    return <p className="text-muted text-sm">Not a thread row.</p>;
+    return <p className="text-muted-foreground text-sm">Not a thread row.</p>;
   }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <button onClick={() => router.back()} className="text-accent hover:underline text-sm">
+        <button onClick={() => router.back()} className="text-primary hover:underline text-sm">
           ← Back
         </button>
         <h1 className="text-xl font-semibold flex-1">Thread Editor</h1>
@@ -97,7 +97,7 @@ export default function ThreadEditorPage() {
           <option value="twitter">Twitter / X</option>
           <option value="linkedin">LinkedIn</option>
         </select>
-        <span className="text-xs text-muted">{state === "saving" ? "Saving…" : state === "saved" ? "Saved" : ""}</span>
+        <span className="text-xs text-muted-foreground">{state === "saving" ? "Saving…" : state === "saved" ? "Saved" : ""}</span>
       </div>
 
       <div className="space-y-2">
@@ -109,7 +109,7 @@ export default function ThreadEditorPage() {
               className={`bg-surface border rounded-lg p-3 space-y-1 ${overLimit ? "border-red-500" : "border-border"}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs text-accent font-medium">Post {p.index ?? i + 1}</span>
+                <span className="text-xs text-primary font-medium">Post {p.index ?? i + 1}</span>
                 <div className="flex gap-2">
                   {overLimit && (
                     <button onClick={() => splitHere(i)} className="text-xs text-amber-400 hover:underline">
@@ -127,7 +127,7 @@ export default function ThreadEditorPage() {
                 value={p.text}
                 onChange={(e) => updatePost(i, e.target.value)}
               />
-              <p className={`text-xs ${overLimit ? "text-red-400" : "text-muted"}`}>
+              <p className={`text-xs ${overLimit ? "text-red-400" : "text-muted-foreground"}`}>
                 {p.text.length} / {limit}
               </p>
             </div>

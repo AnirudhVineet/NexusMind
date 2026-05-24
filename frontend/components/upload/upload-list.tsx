@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 
@@ -46,7 +46,7 @@ function UploadRow({
     <li className="bg-surface border border-border rounded-lg p-4 flex items-center justify-between gap-4">
       <div className="min-w-0">
         <p className="text-sm font-medium truncate">{item.file.name}</p>
-        <p className="text-xs text-muted mt-0.5">
+        <p className="text-xs text-muted-foreground mt-0.5">
           {formatBytes(item.file.size)}
           {data?.chunk_count != null && ` · ${data.chunk_count} chunks`}
         </p>
@@ -61,7 +61,7 @@ function UploadRow({
       </div>
       <div className="shrink-0 flex items-center gap-2">
         {item.status === "uploading" ? (
-          <span className="text-xs text-muted">uploading…</span>
+          <span className="text-xs text-muted-foreground">uploading…</span>
         ) : item.status === "failed" ? (
           <>
             <span className="text-xs text-red-400">failed</span>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 
@@ -73,7 +73,7 @@ export function ReviewModal({ cards, onClose }: Props) {
         {finished ? (
           <div className="text-center py-8">
             <h2 className="text-xl font-semibold">Session complete</h2>
-            <p className="text-muted text-sm mt-2">
+            <p className="text-muted-foreground text-sm mt-2">
               You reviewed {reviewed} card{reviewed === 1 ? "" : "s"}.
             </p>
             <Button className="mt-6" onClick={onClose}>
@@ -82,7 +82,7 @@ export function ReviewModal({ cards, onClose }: Props) {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between text-xs text-muted">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
                 Card {index + 1} of {deck.length}
               </span>
@@ -92,7 +92,7 @@ export function ReviewModal({ cards, onClose }: Props) {
             </div>
 
             <div className="my-6 min-h-[180px] rounded-lg border border-border bg-bg p-6">
-              <p className="text-xs uppercase tracking-wide text-muted">
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Question
               </p>
               <p className="mt-1 text-lg">{card!.question}</p>
@@ -104,7 +104,7 @@ export function ReviewModal({ cards, onClose }: Props) {
                 )}
               >
                 <div className="border-t border-border pt-4">
-                  <p className="text-xs uppercase tracking-wide text-muted">
+                  <p className="text-xs uppercase tracking-wide text-muted-foreground">
                     Answer
                   </p>
                   <p className="mt-1 text-base text-white/90">{card!.answer}</p>

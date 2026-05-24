@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +60,7 @@ function BreakdownPopover({ breakdown }: { breakdown: CredibilityBreakdown }) {
 
   return (
     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-64 rounded-lg border border-border bg-surface shadow-xl p-3">
-      <p className="text-xs font-semibold text-muted mb-2 uppercase tracking-wide">
+      <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
         Credibility breakdown
       </p>
       <div className="space-y-2">
@@ -68,18 +68,18 @@ function BreakdownPopover({ breakdown }: { breakdown: CredibilityBreakdown }) {
           <div key={s.key}>
             <div className="flex justify-between text-xs mb-0.5">
               <span className="text-white/80">{s.label}</span>
-              <span className="text-muted">
+              <span className="text-muted-foreground">
                 {(s.value * 100).toFixed(0)}% · w={s.weight}
               </span>
             </div>
             <ScoreBar value={s.value} />
-            <p className="text-[10px] text-muted mt-0.5">{s.detail}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">{s.detail}</p>
           </div>
         ))}
       </div>
       {typeof breakdown.score === "number" && (
         <div className="mt-2 pt-2 border-t border-border flex justify-between text-xs">
-          <span className="text-muted">Overall</span>
+          <span className="text-muted-foreground">Overall</span>
           <span className="text-white font-medium">
             {(breakdown.score * 100).toFixed(0)}%
           </span>

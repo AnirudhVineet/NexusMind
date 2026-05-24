@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRef, useState } from "react";
 import { DropZone } from "@/components/upload/dropzone";
@@ -117,7 +117,7 @@ export default function UploadPage() {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">Add to Knowledge Base</h1>
-        <p className="text-muted text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Ingest documents from multiple sources. Processing is automatic.
         </p>
       </header>
@@ -132,7 +132,7 @@ export default function UploadPage() {
               "px-4 py-2 text-sm rounded-t-md transition-colors",
               tab === id
                 ? "bg-surface border border-b-surface border-border text-white -mb-px"
-                : "text-muted hover:text-white"
+                : "text-muted-foreground hover:text-white"
             )}
           >
             {label}
@@ -144,14 +144,14 @@ export default function UploadPage() {
       <div className="min-h-[140px]">
         {tab === "file" && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">PDF, plain text, or Markdown files.</p>
+            <p className="text-xs text-muted-foreground">PDF, plain text, or Markdown files.</p>
             <DropZone onFiles={handleFiles} />
           </div>
         )}
 
         {tab === "web" && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">
+            <p className="text-xs text-muted-foreground">
               Paste any public web page URL — NexusMind will fetch and index the text.
             </p>
             <IngestUrlForm mode="web" onSuccess={onIngestSuccess} onError={onIngestError} />
@@ -160,7 +160,7 @@ export default function UploadPage() {
 
         {tab === "youtube" && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">
+            <p className="text-xs text-muted-foreground">
               Paste a YouTube video URL. The transcript will be fetched and indexed.
               The video must have English captions (manual or auto-generated).
             </p>
@@ -170,7 +170,7 @@ export default function UploadPage() {
 
         {tab === "audio" && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">
+            <p className="text-xs text-muted-foreground">
               Upload an audio file (MP3, WAV, M4A, OGG, FLAC). It will be
               transcribed via Groq Whisper and indexed.
             </p>
@@ -193,11 +193,11 @@ export default function UploadPage() {
 
         {tab === "notion" && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">
+            <p className="text-xs text-muted-foreground">
               Import a Notion page. Requires a Notion integration token with read
               access. Set{" "}
-              <code className="text-accent text-[11px]">NOTION_ACCESS_TOKEN</code>{" "}
-              in <code className="text-accent text-[11px]">.env</code> or enter it
+              <code className="text-primary text-[11px]">NOTION_ACCESS_TOKEN</code>{" "}
+              in <code className="text-primary text-[11px]">.env</code> or enter it
               below.
             </p>
             <IngestNotionForm onSuccess={onIngestSuccess} onError={onIngestError} />
@@ -206,7 +206,7 @@ export default function UploadPage() {
 
         {tab === "zip" && (
           <div className="space-y-3">
-            <p className="text-xs text-muted">
+            <p className="text-xs text-muted-foreground">
               Upload a ZIP archive containing any mix of PDF, TXT, MD, or audio
               files. Each file is processed separately (up to 50 files per ZIP).
             </p>

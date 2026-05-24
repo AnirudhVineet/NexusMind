@@ -74,7 +74,7 @@ export default function PublicSharePage() {
   if (!info) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6">
-        <p className="text-muted">Loading…</p>
+        <p className="text-muted-foreground">Loading…</p>
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function PublicSharePage() {
           <button
             onClick={unlock}
             disabled={unlocking}
-            className="w-full px-3 py-2 bg-accent text-accent-foreground rounded disabled:opacity-50"
+            className="w-full px-3 py-2 bg-accent text-primary-foreground rounded disabled:opacity-50"
           >
             {unlocking ? "Unlocking…" : "Unlock"}
           </button>
@@ -116,14 +116,14 @@ export default function PublicSharePage() {
         </h1>
         <a
           href="/"
-          className="text-xs text-muted hover:text-foreground"
+          className="text-xs text-muted-foreground hover:text-foreground"
         >
           nexusmind
         </a>
       </header>
 
       {data.missing && (
-        <p className="text-muted">The shared item is no longer available.</p>
+        <p className="text-muted-foreground">The shared item is no longer available.</p>
       )}
 
       {!data.missing && info.target_type === "media_job" && data.has_file && (
@@ -172,7 +172,7 @@ export default function PublicSharePage() {
         </div>
       )}
 
-      <footer className="text-xs text-muted text-center pt-4 border-t border-border">
+      <footer className="text-xs text-muted-foreground text-center pt-4 border-t border-border">
         Made with NexusMind · views: {data.view_count ?? 0}
       </footer>
     </div>

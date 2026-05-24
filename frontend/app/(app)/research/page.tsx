@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useResearch, useBrief } from "@/hooks/useResearch";
@@ -21,7 +21,7 @@ const BAND_STYLES: Record<string, string> = {
   high: "text-green-300",
   moderate: "text-yellow-300",
   low: "text-red-300",
-  none: "text-muted",
+  none: "text-muted-foreground",
 };
 
 function CitationChips({
@@ -50,7 +50,7 @@ function CitationChips({
             className={`text-xs px-2 py-0.5 rounded transition-colors ${
               isOpen
                 ? "bg-accent/30 text-white"
-                : "bg-accent/10 text-accent hover:bg-accent/20"
+                : "bg-accent/10 text-primary hover:bg-accent/20"
             }`}
             title={ev.document_title}
           >
@@ -65,12 +65,12 @@ function CitationChips({
 function EvidenceQuote({ item }: { item: EvidenceItem }) {
   const body = item.text || item.key_point || "(no excerpt available)";
   return (
-    <blockquote className="mt-2 text-xs italic text-muted border-l-2 border-accent/40 pl-3">
+    <blockquote className="mt-2 text-xs italic text-muted-foreground border-l-2 border-accent/40 pl-3">
       {body}
       {item.document_id && (
         <a
           href={`/documents/${item.document_id}`}
-          className="text-accent block mt-1 not-italic hover:underline"
+          className="text-primary block mt-1 not-italic hover:underline"
         >
           Open document →
         </a>
@@ -81,14 +81,14 @@ function EvidenceQuote({ item }: { item: EvidenceItem }) {
 
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    queued: "bg-border/50 text-muted",
+    queued: "bg-border/50 text-muted-foreground",
     retrieving: "bg-yellow-800/50 text-yellow-300",
     synthesizing: "bg-blue-800/50 text-blue-300",
     complete: "bg-green-800/50 text-green-300",
     failed: "bg-red-800/50 text-red-300",
   };
   return (
-    <span className={`text-xs rounded px-2 py-0.5 ${colors[status] ?? "bg-border/50 text-muted"}`}>
+    <span className={`text-xs rounded px-2 py-0.5 ${colors[status] ?? "bg-border/50 text-muted-foreground"}`}>
       {status}
     </span>
   );
@@ -141,24 +141,24 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
     } catch {}
   };
 
-  if (isLoading) return <p className="text-muted text-sm">Loading…</p>;
+  if (isLoading) return <p className="text-muted-foreground text-sm">Loading…</p>;
   if (error) return <p className="text-red-400 text-sm">{error}</p>;
   if (!brief) return null;
 
   const band = bj?.evidence_band as string | undefined;
-  const bandClass = band ? BAND_STYLES[band] ?? "text-muted" : "text-muted";
+  const bandClass = band ? BAND_STYLES[band] ?? "text-muted-foreground" : "text-muted-foreground";
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <button onClick={onBack} className="text-accent hover:underline text-sm">← Back</button>
+        <button onClick={onBack} className="text-primary hover:underline text-sm">← Back</button>
         <h2 className="text-xl font-semibold flex-1">{brief.topic}</h2>
         <StatusBadge status={brief.status} />
         {brief.status === "complete" && (
           <div className="flex gap-2">
             {(["md", "pdf", "json"] as const).map(f => (
               <button key={f} onClick={() => download(f)}
-                className="px-3 py-1.5 rounded-md border border-border text-sm text-muted hover:text-white">
+                className="px-3 py-1.5 rounded-md border border-border text-sm text-muted-foreground hover:text-white">
                 .{f}
               </button>
             ))}
@@ -171,7 +171,7 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
       )}
 
       {brief.status !== "complete" && brief.status !== "failed" && (
-        <div className="bg-surface border border-border rounded-lg p-6 text-center text-muted text-sm animate-pulse">
+        <div className="bg-surface border border-border rounded-lg p-6 text-center text-muted-foreground text-sm animate-pulse">
           {brief.status === "queued" ? "Queued for processing…" : brief.status === "retrieving" ? "Gathering evidence…" : "Synthesizing brief…"}
         </div>
       )}
@@ -187,14 +187,14 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
           {bj.executive_summary && (
             <div className="bg-surface border border-border rounded-lg p-5">
               <h3 className="font-medium mb-2">Executive Summary</h3>
-              <p className="text-sm text-muted">{bj.executive_summary}</p>
+              <p className="text-sm text-muted-foreground">{bj.executive_summary}</p>
               {bj.confidence != null && (
                 <p className="text-xs mt-2">
-                  <span className="text-muted">Evidence support: </span>
+                  <span className="text-muted-foreground">Evidence support: </span>
                   <span className={bandClass}>
                     {band ?? "—"}
                   </span>
-                  <span className="text-muted">
+                  <span className="text-muted-foreground">
                     {" "}({(bj.confidence * 100).toFixed(0)}%)
                   </span>
                 </p>
@@ -208,7 +208,7 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
                 {bj.key_arguments.map((arg: any, i: number) => (
                   <li key={i} className="border-l-2 border-accent/40 pl-3">
                     <p className="text-sm">{arg.claim}</p>
-                    <span className={`text-xs rounded px-1.5 py-0.5 mt-1 inline-block ${arg.stance === "supporting" ? "bg-green-800/40 text-green-300" : arg.stance === "opposing" ? "bg-red-800/40 text-red-300" : "bg-border/40 text-muted"}`}>
+                    <span className={`text-xs rounded px-1.5 py-0.5 mt-1 inline-block ${arg.stance === "supporting" ? "bg-green-800/40 text-green-300" : arg.stance === "opposing" ? "bg-red-800/40 text-red-300" : "bg-border/40 text-muted-foreground"}`}>
                       {arg.stance}
                     </span>
                     <CitationChips
@@ -253,7 +253,7 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
           {bj.knowledge_gaps?.length > 0 && (
             <div className="bg-surface border border-border rounded-lg p-5">
               <h3 className="font-medium mb-3">Knowledge Gaps</h3>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted">
+              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                 {bj.knowledge_gaps.map((g: string, i: number) => <li key={i}>{g}</li>)}
               </ul>
             </div>
@@ -261,7 +261,7 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
           {bj.recommended_reading?.length > 0 && (
             <div className="bg-surface border border-border rounded-lg p-5">
               <h3 className="font-medium mb-3">Recommended Reading</h3>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted">
+              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                 {bj.recommended_reading.map((r: any, i: number) => {
                   if (typeof r === "string") return <li key={i}>{r}</li>;
                   const title = r?.document_title ?? r?.title ?? "Untitled";
@@ -279,7 +279,7 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
           {sourceRollup.length > 0 && (
             <div className="bg-surface border border-border rounded-lg p-5">
               <h3 className="font-medium mb-3">
-                Sources <span className="text-muted text-xs">({sourceRollup.length})</span>
+                Sources <span className="text-muted-foreground text-xs">({sourceRollup.length})</span>
               </h3>
               <ul className="space-y-1.5 text-sm">
                 {sourceRollup.map((s, i) => (
@@ -287,14 +287,14 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
                     {s.document_id ? (
                       <a
                         href={`/documents/${s.document_id}`}
-                        className="text-accent hover:underline truncate"
+                        className="text-primary hover:underline truncate"
                       >
                         {s.title}
                       </a>
                     ) : (
                       <span className="truncate">{s.title}</span>
                     )}
-                    <span className="text-xs text-muted shrink-0">
+                    <span className="text-xs text-muted-foreground shrink-0">
                       {s.count} chunk{s.count === 1 ? "" : "s"}
                     </span>
                   </li>
@@ -304,13 +304,13 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
           )}
           {(bj.evidence_table?.length ?? 0) > 0 && (
             <details className="bg-surface border border-border rounded-lg p-5">
-              <summary className="font-medium cursor-pointer hover:text-accent">
+              <summary className="font-medium cursor-pointer hover:text-primary">
                 Evidence ({bj.evidence_table.length} chunks)
               </summary>
               <ul className="mt-3 space-y-3">
                 {(bj.evidence_table as EvidenceItem[]).map((ev, i) => (
                   <li key={ev.chunk_id ?? i} className="border-l-2 border-border pl-3">
-                    <p className="text-xs text-muted mb-1">
+                    <p className="text-xs text-muted-foreground mb-1">
                       {ev.document_title ?? "Untitled"}
                       {typeof ev.score === "number" && (
                         <span className="ml-2">({(ev.score * 100).toFixed(0)}%)</span>
@@ -320,7 +320,7 @@ function BriefDetail({ id, onBack }: { id: string; onBack: () => void }) {
                     {ev.document_id && (
                       <a
                         href={`/documents/${ev.document_id}`}
-                        className="text-accent text-xs hover:underline"
+                        className="text-primary text-xs hover:underline"
                       >
                         Open document →
                       </a>
@@ -373,7 +373,7 @@ export default function ResearchPage() {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">Research Assistant</h1>
-        <p className="text-muted text-sm mt-1">Generate AI-powered research briefs from your knowledge base.</p>
+        <p className="text-muted-foreground text-sm mt-1">Generate AI-powered research briefs from your knowledge base.</p>
       </header>
 
       <div className="bg-surface border border-border rounded-lg p-5 flex gap-3">
@@ -394,9 +394,9 @@ export default function ResearchPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-muted text-sm">Loading…</p>
+        <p className="text-muted-foreground text-sm">Loading…</p>
       ) : briefs.length === 0 ? (
-        <div className="bg-surface border border-border rounded-lg p-8 text-center text-muted text-sm">
+        <div className="bg-surface border border-border rounded-lg p-8 text-center text-muted-foreground text-sm">
           No research briefs yet. Enter a topic above to get started.
         </div>
       ) : (
@@ -407,12 +407,12 @@ export default function ResearchPage() {
                 <button onClick={() => setSelectedId(b.id)} className="text-sm font-medium hover:underline text-left truncate block">
                   {b.topic}
                 </button>
-                <p className="text-xs text-muted mt-0.5">{new Date(b.created_at).toLocaleDateString()}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{new Date(b.created_at).toLocaleDateString()}</p>
               </div>
               <div className="flex items-center gap-3 shrink-0">
                 <StatusBadge status={b.status} />
                 <button onClick={() => { if (confirm("Delete brief?")) remove(b.id); }}
-                  className="text-xs text-muted hover:text-red-400">Delete</button>
+                  className="text-xs text-muted-foreground hover:text-red-400">Delete</button>
               </div>
             </li>
           ))}

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -89,13 +89,13 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
       <div className="bg-surface border border-border rounded-lg p-6 max-w-md w-full space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold">Render Reel</h3>
-          <button onClick={onClose} className="text-muted hover:text-foreground">
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             ✕
           </button>
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs uppercase text-muted">Aspect ratio</label>
+          <label className="text-xs uppercase text-muted-foreground">Aspect ratio</label>
           <select
             className="w-full bg-background border border-border rounded px-2 py-1.5 text-sm"
             value={aspect}
@@ -110,12 +110,12 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs uppercase text-muted">
+          <label className="text-xs uppercase text-muted-foreground">
             Voice{" "}
             {voicesLoading ? (
-              <span className="text-muted">· loading…</span>
+              <span className="text-muted-foreground">· loading…</span>
             ) : (
-              <span className="text-muted">· {voices.length} available</span>
+              <span className="text-muted-foreground">· {voices.length} available</span>
             )}
           </label>
           <select
@@ -154,12 +154,12 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs uppercase text-muted">Length</label>
+          <label className="text-xs uppercase text-muted-foreground">Length</label>
           <div className="flex gap-2 text-sm">
             <button
               className={`px-3 py-1 rounded border ${
                 length === "short"
-                  ? "bg-accent text-accent-foreground border-accent"
+                  ? "bg-accent text-primary-foreground border-accent"
                   : "border-border"
               }`}
               onClick={() => setLength("short")}
@@ -170,7 +170,7 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
             <button
               className={`px-3 py-1 rounded border ${
                 length === "long"
-                  ? "bg-accent text-accent-foreground border-accent"
+                  ? "bg-accent text-primary-foreground border-accent"
                   : "border-border"
               }`}
               onClick={() => setLength("long")}
@@ -180,7 +180,7 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
             </button>
           </div>
           {length === "long" && (
-            <p className="text-xs text-muted mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Stretches existing beats to ~3× airtime. For best results,
               regenerate the script with the long-form option from the
               content generator.
@@ -189,7 +189,7 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs uppercase text-muted">Music style</label>
+          <label className="text-xs uppercase text-muted-foreground">Music style</label>
           <select
             className="w-full bg-background border border-border rounded px-2 py-1.5 text-sm"
             value={music}
@@ -216,16 +216,16 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
         </div>
 
         <div className="space-y-1">
-          <label className="text-xs uppercase text-muted">Quality</label>
+          <label className="text-xs uppercase text-muted-foreground">Quality</label>
           <div className="flex gap-2 text-sm">
             <button
-              className={`px-3 py-1 rounded border ${quality === "preview" ? "bg-accent text-accent-foreground border-accent" : "border-border"}`}
+              className={`px-3 py-1 rounded border ${quality === "preview" ? "bg-accent text-primary-foreground border-accent" : "border-border"}`}
               onClick={() => setQuality("preview")}
             >
               Preview (fast, 480p)
             </button>
             <button
-              className={`px-3 py-1 rounded border ${quality === "final" ? "bg-accent text-accent-foreground border-accent" : "border-border"}`}
+              className={`px-3 py-1 rounded border ${quality === "final" ? "bg-accent text-primary-foreground border-accent" : "border-border"}`}
               onClick={() => setQuality("final")}
             >
               Final (1080p)
@@ -244,7 +244,7 @@ export function RenderReelModal({ contentId, onClose, onJobCreated }: Props) {
             Cancel
           </button>
           <button
-            className="px-3 py-1.5 text-sm bg-accent text-accent-foreground rounded disabled:opacity-50"
+            className="px-3 py-1.5 text-sm bg-accent text-primary-foreground rounded disabled:opacity-50"
             disabled={submitting}
             onClick={submit}
           >

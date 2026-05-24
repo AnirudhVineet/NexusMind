@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useMediaJob } from "@/hooks/useMediaJob";
@@ -36,15 +36,15 @@ export function MediaJobProgress({ jobId, onDone }: Props) {
   }, [job?.status, job?.id, onDone]);
 
   if (error) return <p className="text-red-400 text-xs">{error}</p>;
-  if (!job) return <p className="text-muted text-xs">Loading job…</p>;
+  if (!job) return <p className="text-muted-foreground text-xs">Loading job…</p>;
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between text-xs">
-        <span className="text-muted">
+        <span className="text-muted-foreground">
           {job.stage ?? job.status} · {job.progress_pct}%
         </span>
-        <span className="text-muted">{job.job_type}</span>
+        <span className="text-muted-foreground">{job.job_type}</span>
       </div>
       <div className="w-full h-2 bg-background rounded overflow-hidden border border-border">
         <div
@@ -64,7 +64,7 @@ export function MediaJobProgress({ jobId, onDone }: Props) {
         />
       )}
       {job.status === "complete" && job.output_size_bytes != null && (
-        <p className="text-xs text-muted">
+        <p className="text-xs text-muted-foreground">
           {(job.output_size_bytes / 1024 / 1024).toFixed(1)} MB
           {job.duration_seconds != null && (
             <> · {job.duration_seconds.toFixed(1)} s</>

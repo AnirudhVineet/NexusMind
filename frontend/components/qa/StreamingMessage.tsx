@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Fragment } from "react";
 import { CitationChip } from "@/components/qa/citation-chip";
@@ -36,7 +36,7 @@ export function StreamingMessage({ msg }: { msg: StreamMessage }) {
           isUser
             ? "bg-accent text-white"
             : msg.noSource
-            ? "bg-surface border border-border text-muted italic"
+            ? "bg-surface border border-border text-muted-foreground italic"
             : "bg-surface border border-border"
         )}
       >

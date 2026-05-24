@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import {
@@ -133,7 +133,7 @@ export function BriefAudioPlayer({ briefId }: Props) {
         : `Generating narration${stage ? ` (${stage})` : ""}… ${progress}%`;
     return (
       <div className="bg-background border border-border rounded-lg p-3 space-y-2">
-        <p className="text-xs text-muted">{label}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
         <div className="h-1.5 bg-border/60 rounded overflow-hidden">
           <div
             className="h-full bg-accent transition-[width] duration-300"
@@ -166,7 +166,7 @@ export function BriefAudioPlayer({ briefId }: Props) {
         Your browser does not support the audio element.
       </audio>
       <details>
-        <summary className="text-xs text-muted cursor-pointer hover:text-foreground">
+        <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground">
           {narration.chapters.length} chapters ·{" "}
           {narration.total_duration_seconds.toFixed(0)}s total
         </summary>
@@ -183,7 +183,7 @@ export function BriefAudioPlayer({ briefId }: Props) {
               }}
             >
               <span>{c.heading}</span>
-              <span className="text-muted">
+              <span className="text-muted-foreground">
                 {Math.floor(c.offset_seconds / 60)}:
                 {String(Math.floor(c.offset_seconds % 60)).padStart(2, "0")}
               </span>

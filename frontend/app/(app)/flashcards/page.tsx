@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -10,7 +10,7 @@ function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-lg border border-border bg-surface p-4">
       <p className="text-2xl font-semibold">{value}</p>
-      <p className="text-xs text-muted mt-0.5">{label}</p>
+      <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
 }
@@ -26,7 +26,7 @@ export default function FlashcardsPage() {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">Flashcards</h1>
-        <p className="text-muted text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Spaced-repetition review with SM-2 scheduling.
         </p>
       </header>
@@ -40,13 +40,13 @@ export default function FlashcardsPage() {
 
       <div className="rounded-xl border border-border bg-surface p-8 text-center">
         {isLoading ? (
-          <p className="text-muted text-sm">Loading…</p>
+          <p className="text-muted-foreground text-sm">Loading…</p>
         ) : dueCount > 0 ? (
           <>
             <p className="text-lg">
               {dueCount} card{dueCount === 1 ? "" : "s"} ready for review.
             </p>
-            <p className="text-xs text-muted mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Space to flip · keys 1–4 to grade · Esc to exit.
             </p>
             <Button className="mt-5" onClick={() => setReviewing(true)}>
@@ -54,7 +54,7 @@ export default function FlashcardsPage() {
             </Button>
           </>
         ) : (
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             {stats?.total
               ? "Nothing due right now — come back when cards are scheduled."
               : "No cards yet. Open a document and use “Generate cards” to get started."}
@@ -62,7 +62,7 @@ export default function FlashcardsPage() {
         )}
       </div>
 
-      <p className="text-xs text-muted">
+      <p className="text-xs text-muted-foreground">
         {stats?.reviews_last_7_days ?? 0} review
         {stats?.reviews_last_7_days === 1 ? "" : "s"} in the last 7 days
         {stats?.suspended ? ` · ${stats.suspended} suspended` : ""}
