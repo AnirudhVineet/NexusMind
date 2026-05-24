@@ -42,9 +42,26 @@ Get-Content ..\.env | ForEach-Object {
 }
 .\.venv\Scripts\alembic.exe upgrade head
 
-# --- Frontend: npm install ---
-Write-Host "[4/4] Frontend: npm install..." -ForegroundColor Cyan
+# --- Frontend: .env.local + npm install ---
+Write-Host "[4/4] Frontend: creating .env.local and running npm install..." -ForegroundColor Cyan
 Set-Location $root\frontend
+
+# Next.js only reads .env files from its own directory, not the project root.
+# Extract the three frontend vars from the root .env and write frontend/.env.local.
+$envLines = Get-Content $root\.env
+$extract = @("NEXTAUTH_SECRET", "NEXTAUTH_URL", "NEXT_PUBLIC_API_URL")
+$frontendEnv = @()
+foreach ($key in $extract) {
+    $line = $envLines | Where-Object { $_ -match "^\s*$key=" } | Select-Object -First 1
+    if ($line) { $frontendEnv += $line }
+}
+# Also expose NEXTAUTH_SECRET as AUTH_SECRET (Auth.js v5 canonical name)
+$secret = ($frontendEnv | Where-Object { $_ -match "^NEXTAUTH_SECRET=" }) -replace "^NEXTAUTH_SECRET=", ""
+if ($secret) { $frontendEnv += "AUTH_SECRET=$secret" }
+
+$frontendEnv | Set-Content -Path ".env.local" -Encoding utf8
+Write-Host "  Wrote frontend/.env.local" -ForegroundColor Gray
+
 npm install
 
 Set-Location $root

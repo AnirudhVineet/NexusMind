@@ -236,12 +236,54 @@ root:
 # Terminal 1 — FastAPI on :8000
 .\scripts\start-api.ps1
 
-# Terminal 2 — Celery worker (parse → chunk → embed → NER → claims → ...)
+# Terminal 2 — All 8 Celery workers (hidden background processes, logs → logs\workers\)
 .\scripts\start-worker.ps1
+
+# Terminal 2 (alternative) — Lite mode: only fast + media + content + research workers
+# Saves ~3-5 GB RAM but disables several features (see table below)
+.\scripts\start-worker.ps1 -Lite
 
 # Terminal 3 — Next.js on :3000
 .\scripts\start-frontend.ps1
 ```
+
+The workers started by `start-worker.ps1` run as hidden background processes. To stop them:
+
+```powershell
+Get-Content logs\workers\pids.txt | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }
+```
+
+To check their status, tail the per-worker logs in `logs\workers\`:
+
+```powershell
+Get-Content logs\workers\NM-fast.err.log -Tail 20
+```
+
+The 8 worker queues and what they handle:
+
+| Worker | Queue(s) | Pipeline stage | Lite |
+|---|---|---|---|
+| NM-fast | `default` | parse → chunk → embed | ✓ |
+| NM-ner | `ner` | spaCy + GLiNER entity extraction | ✗ |
+| NM-llm | `relations`, `intelligence` | Ollama relation extraction + intelligence summary | ✗ |
+| NM-credibility | `credibility` | Source credibility scoring | ✗ |
+| NM-misc | `ocr`, `transcription`, `cards`, `maintenance` | OCR, audio transcription, flashcards, scheduled cleanup | ✗ |
+| NM-research | `research` | Research brief generation | ✓ |
+| NM-media | `reel` | Reel / narration / storyboard / bundle render | ✓ |
+| NM-content | `content` | Script, caption, thread, meme generation | ✓ |
+
+> **Lite mode** skips the four ML-heavy workers (NM-ner, NM-llm, NM-credibility,
+> NM-misc), saving ~3–5 GB of RAM. The following features will **not work** until
+> you restart with the full `.\scripts\start-worker.ps1`:
+>
+> - Flashcards (requires `cards` queue)
+> - Named entities panel (requires `ner` queue)
+> - Relations graph (requires `ner` + `relations` queues)
+> - Intelligence summaries and topic tags (requires `intelligence` queue)
+> - Credibility badges (requires `credibility` queue)
+>
+> Everything else — upload, Q&A, studio reels, content repurposing, and research
+> briefs — works normally in Lite mode.
 
 Then:
 - Open <http://localhost:3000>, register, sign in
@@ -256,10 +298,14 @@ Spot-check endpoints:
   Redis, and the storage dir are all reachable
 - <http://localhost:8000/docs> → OpenAPI
 
-### Worker queue note (Windows)
+### Worker note (Windows)
 
 Celery on Windows must use `--pool=solo`. The start script handles this; if
 you ever invoke `celery` by hand, include `--pool=solo`.
+
+Re-running `start-worker.ps1` is safe — it kills any stale workers from a
+previous run before launching fresh ones, so you never end up with duplicates
+processing the same queue.
 
 ---
 
@@ -286,6 +332,7 @@ DB.
 | Celery hangs or `ValueError: not enough values to unpack` | Worker pool needs `--pool=solo` on Windows. Use the start script. |
 | `OPENAI_API_KEY required` | Old env var. You want `GROQ_API_KEY` + `GEMINI_API_KEY`. |
 | `connection refused` to `localhost:11434` | Ollama isn't running. Start the Ollama desktop app or `ollama serve`. Q&A still works without it; Phase 2 pipelines won't. |
+| `[auth][error] MissingSecret` in frontend console | `frontend/.env.local` doesn't exist. Re-run `.\scripts\setup.ps1` — it creates this file from the root `.env`. Or create it manually with `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, and `NEXT_PUBLIC_API_URL`. |
 | Frontend 401 loops | `NEXTAUTH_SECRET` mismatch between server restarts, or `NEXTAUTH_URL` doesn't match the URL you're loading. |
 | Reel render fails with `ffmpeg not found` | Either reinstall `imageio-ffmpeg`, or install FFmpeg and add it to `PATH`. |
 | `429` from Groq during heavy use | Free-tier rate limit. Wait, or upgrade the Groq plan. |
