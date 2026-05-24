@@ -1,53 +1,89 @@
-# NexusMind — Phase 1 MVP (native Windows setup)
+# NexusMind
 
-A personal AI knowledge management platform. Upload PDFs / TXT / MD, get
-citation-grounded answers from your own documents.
+A personal AI knowledge management system. Upload PDFs, articles, audio, or
+YouTube transcripts; get citation-grounded answers, automatic claim extraction
+with contradiction detection, source-credibility scoring, flashcards, and an
+end-to-end studio that turns documents into narrated reels, memes, and
+repurposed content.
+
+Built for one user, on one machine. No Docker, no Kubernetes, no cloud bill —
+runs natively on Windows (or macOS/Linux with trivial path tweaks).
+
+---
+
+## What you get
+
+- **Library** — upload PDF / TXT / MD / HTML / audio; auto-parse, chunk,
+  embed, NER, relation extraction, intelligence summary
+- **Q&A** — Groq-hosted Llama 3.3 70B over a hybrid (BM25 + vector + reranker)
+  retriever, with inline citations
+- **Conversations** — multi-turn Q&A history
+- **Annotations** — highlight, note, flashcard, and re-ask any span in any
+  document
+- **Claims & Contradictions** — automatic claim extraction with cross-document
+  contradiction detection via NLI
+- **Credibility** — 4-signal composite source score with cohort recompute
+- **Flashcards** — SRS deck auto-built from your documents
+- **Research briefs** — multi-source synthesis with PDF export
+- **Studio** — reel renderer (FFmpeg), narration (Piper/SAPI TTS), meme
+  generator (Pillow), repurposed content (scripts, captions, threads),
+  brand kits, public share links, per-user quotas
+
+---
 
 ## Stack
 
-- **Backend:** FastAPI 0.115 + SQLAlchemy 2 (async) + Celery 5
-- **DB:** PostgreSQL 16 with `pgvector` (HNSW index)
-- **Cache / broker:** Redis-compatible (Memurai or Redis)
-- **Storage:** local filesystem (`./data/files`)
-- **AI:** Google Gemini `gemini-embedding-001` (768-dim) for embeddings + Groq
-  `llama-3.3-70b-versatile` for the LLM (OpenAI-compatible API)
-- **Frontend:** Next.js 14 (App Router) + NextAuth 5 + TanStack Query + Tailwind
+| Layer | Choice |
+|---|---|
+| Backend | FastAPI 0.115 + SQLAlchemy 2 (async + sync) + Celery 5 |
+| DB | PostgreSQL 16 with `pgvector` (HNSW indexes) |
+| Broker / cache | Redis-compatible (Memurai on Windows) |
+| Storage | Local filesystem under `./data/files` |
+| Frontend | Next.js 14 (App Router) + NextAuth 5 + TanStack Query + Tailwind + shadcn/ui |
+| Q&A LLM | Groq `llama-3.3-70b-versatile` (OpenAI-compatible) |
+| NER/relations/intelligence/claims LLM | Ollama `qwen2.5:7b-instruct` (local, JSON mode) |
+| Chunk embeddings | Google Gemini `gemini-embedding-001` (768-dim) |
+| Entity embeddings | `sentence-transformers/all-MiniLM-L6-v2` (384-dim, local) |
+| Claim embeddings | `BAAI/bge-base-en-v1.5` (768-dim, local) |
+| NLI | `cross-encoder/nli-deberta-v3-base` (local) |
+| NER | spaCy `en_core_web_trf` + GLiNER `urchade/gliner_medium-v2.1` |
+| TTS | Piper (preferred) or Windows SAPI via pyttsx3 |
+| Video | FFmpeg via `imageio-ffmpeg` |
+
+---
 
 ## Prerequisites
 
-You'll install five things on your machine. All free, all native Windows
-binaries — no Docker, no WSL required.
+Install these once on your machine. All free.
 
 ### 1. Python 3.11+
-<https://www.python.org/downloads/windows/>
-During install, tick **"Add python.exe to PATH"**. Verify: `python --version`.
+<https://www.python.org/downloads/windows/> — tick **Add python.exe to PATH**.
+Verify: `python --version`.
 
-### 2. Node.js 20+
-<https://nodejs.org/en/download> (LTS).
-Verify: `node --version`, `npm --version`.
+### 2. Node.js 20+ (LTS)
+<https://nodejs.org/en/download>. Verify: `node --version`.
 
 ### 3. PostgreSQL 16
-<https://www.postgresql.org/download/windows/> → EDB installer.
-- Pick port `5432` (default).
-- Set the `postgres` user password to something you'll remember (the example
-  config uses `password` — change it everywhere if you pick differently).
-- After install, open **Stack Builder** (it autostarts) or **pgAdmin**, and
-  create a database named `nexusmind`. From a Postgres shell (`psql`):
+<https://www.postgresql.org/download/windows/> (EDB installer).
+- Use port `5432` (the default).
+- Set a password for the `postgres` user. The example config uses `password` —
+  if you pick something else, update `DATABASE_URL` and `DATABASE_SYNC_URL`.
+- After install, open `psql` and create the database:
   ```sql
   CREATE DATABASE nexusmind;
   ```
 
-### 4. pgvector
-The Postgres extension. Two paths, easiest first:
+### 4. pgvector (Postgres extension)
+Two paths:
 
-**Option A — Stack Builder (if it's listed):** open Application Stack Builder
-on your Postgres install and install pgvector if shown.
+**A — Stack Builder** (easiest if it's listed): open Application Stack Builder
+on your Postgres install and pick pgvector.
 
-**Option B — Manual install (most common):**
-1. Install **Visual Studio Build Tools** with the "Desktop development with
-   C++" workload: <https://visualstudio.microsoft.com/visual-cpp-build-tools/>.
-2. Open the **x64 Native Tools Command Prompt for VS** (from Start Menu).
-3. Build and install pgvector:
+**B — Build from source:**
+1. Install **Visual Studio Build Tools** with the *Desktop development with
+   C++* workload: <https://visualstudio.microsoft.com/visual-cpp-build-tools/>.
+2. Open *x64 Native Tools Command Prompt for VS* from the Start Menu.
+3. Build and install:
    ```
    set "PGROOT=C:\Program Files\PostgreSQL\16"
    git clone --branch v0.7.4 https://github.com/pgvector/pgvector.git
@@ -55,138 +91,240 @@ on your Postgres install and install pgvector if shown.
    nmake /F Makefile.win
    nmake /F Makefile.win install
    ```
-4. The extension is now available. The first DB migration runs
-   `CREATE EXTENSION vector` for you.
 
-If that's too painful, you can use a free hosted Postgres with pgvector
-preinstalled (Neon, Supabase, Render — all have free tiers) and just point
-`DATABASE_URL` / `DATABASE_SYNC_URL` at it. The code doesn't care where Postgres
-lives.
+If both options are painful, use a hosted Postgres with pgvector preinstalled
+(Neon, Supabase, Render free tiers) and point `DATABASE_URL` /
+`DATABASE_SYNC_URL` at it. The first migration runs `CREATE EXTENSION vector`
+for you.
 
-### 5. Redis (Memurai for Windows)
-Native Redis isn't supported on Windows. Use **Memurai Developer** (free, fully
-Redis-compatible): <https://www.memurai.com/get-memurai>.
+### 5. Redis (Memurai on Windows)
+<https://www.memurai.com/get-memurai> — installs as a Windows service on
+`localhost:6379`. Verify: `memurai-cli ping` → `PONG`.
 
-After install it runs as a Windows service on `localhost:6379` automatically.
-Verify: `memurai-cli ping` → `PONG`.
+(Alternatives: Upstash hosted Redis, or Redis in WSL2.)
 
-(Alternatives: Upstash free hosted Redis, or run Redis inside WSL2.)
+### 6. Ollama (for local NER / relations / intelligence / claims LLM)
+<https://ollama.com/download>. After install, pull the model the pipeline uses:
+```powershell
+ollama pull qwen2.5:7b-instruct
+ollama pull llama3.1:8b   # fallback model
+```
+Ollama runs as a background service on `localhost:11434`. If you skip this,
+Phase 2 pipelines (NER, relations, intelligence, claims) won't run, but Q&A
+still works via Groq.
+
+### 7. FFmpeg (Studio / reel renderer)
+The Python package `imageio-ffmpeg` bundles an FFmpeg binary, so for most
+users this works out of the box. If you'd rather install system-wide:
+<https://www.gyan.dev/ffmpeg/builds/> → add `ffmpeg.exe` to `PATH`.
+
+Only needed for the Studio reel/narration features. Skip if you only want
+ingest + Q&A.
+
+---
+
+## API keys
+
+You'll need two API keys for the default configuration: **Groq** (for Q&A) and
+**Gemini** (for embeddings). Both have generous free tiers.
+
+| Key | Where to get it | Purpose | Required? |
+|---|---|---|---|
+| `GROQ_API_KEY` | <https://console.groq.com/keys> | Q&A LLM (`llama-3.3-70b-versatile`) | Yes |
+| `GEMINI_API_KEY` | <https://aistudio.google.com/apikey> | Chunk embeddings (`gemini-embedding-001`) | Yes |
+| `JWT_SECRET` | Generate locally (32 random bytes) | Backend session signing | Yes |
+| `NEXTAUTH_SECRET` | Generate locally (32 random bytes) | NextAuth session signing | Yes |
+| `SENTRY_DSN_BACKEND` | <https://sentry.io> project settings | Error tracking (optional) | No |
+| `SENTRY_DSN_FRONTEND` | <https://sentry.io> project settings | Error tracking (optional) | No |
+| `METRICS_TOKEN` | Generate locally | Bearer token for `/metrics` (optional) | No |
+
+### Where the keys go
+
+All keys live in a single `.env` file at the repo root. Copy the template:
+
+```powershell
+Copy-Item .env.example .env
+notepad .env
+```
+
+Then edit the values. The relevant block looks like this:
+
+```ini
+# AI: LLM (Groq, OpenAI-compatible)
+GROQ_API_KEY=gsk-...your-key-here...
+GROQ_BASE_URL=https://api.groq.com/openai/v1
+LLM_MODEL=llama-3.3-70b-versatile
+
+# AI: Embeddings (Google Gemini)
+GEMINI_API_KEY=...your-key-here...
+EMBEDDING_MODEL=gemini-embedding-001
+EMBEDDING_DIM=768
+
+# Auth
+JWT_SECRET=...32-random-bytes...
+NEXTAUTH_SECRET=...32-random-bytes...
+```
+
+### Generating the secrets
+
+Run this in PowerShell to mint a 32-byte base64 secret you can paste in:
+
+```powershell
+[System.Convert]::ToBase64String((1..32 | ForEach-Object {Get-Random -Min 0 -Max 256}))
+```
+
+Run it twice — once for `JWT_SECRET`, once for `NEXTAUTH_SECRET`.
+
+### Security notes
+
+- `.env` is in `.gitignore` (along with `.env.local`, `*.pem`, `*.key`,
+  `secrets/`). It will never be committed.
+- The only env file that *is* tracked is `.env.example` — a template with
+  placeholder values.
+- Rotate `GROQ_API_KEY` / `GEMINI_API_KEY` from the provider dashboards if
+  they leak.
+
+---
 
 ## First-time setup
 
-From `C:\Users\aniru\OneDrive\Desktop\Projects\NexusMind`, in PowerShell:
+From the repo root, in PowerShell:
 
 ```powershell
-# 1. Create your .env from the template
+# 1. .env (see "API keys" above)
 Copy-Item .env.example .env
-
-# 2. Edit .env and set:
-#    GROQ_API_KEY        -> https://console.groq.com/keys
-#    GEMINI_API_KEY      -> https://aistudio.google.com/apikey
-#    JWT_SECRET          -> any 32-byte random string
-#    NEXTAUTH_SECRET     -> any 32-byte random string
-#    DATABASE_URL/_SYNC  -> adjust password if not "password"
 notepad .env
 
-# 3. Generate two secrets if you want
-[System.Convert]::ToBase64String((1..32 | ForEach-Object {Get-Random -Min 0 -Max 256}))
-
-# 4. Run the setup script
-#    (creates Python venv, installs backend + frontend deps,
-#     creates ./data/files, runs Alembic migrations)
+# 2. One-shot setup: Python venv, backend + frontend deps, ./data/files,
+#    Alembic migrations
 .\scripts\setup.ps1
 ```
 
-If PowerShell blocks the script, allow it for this session:
+If PowerShell blocks the script:
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
-## Run it
+What `setup.ps1` does:
+- Creates `backend/.venv` and installs `backend/requirements.txt`
+- Runs `npm install` in `frontend/`
+- Creates `./data/files`
+- Runs `alembic upgrade head` (creates extension, schema, HNSW indexes)
 
-You need **three** terminals open at the same time (one per process). From the
-project root in each:
+---
+
+## Running the app
+
+You need **three** terminals (one per process). All commands from the repo
+root:
 
 ```powershell
-# Terminal 1 — FastAPI
+# Terminal 1 — FastAPI on :8000
 .\scripts\start-api.ps1
 
-# Terminal 2 — Celery worker (parses, chunks, embeds)
+# Terminal 2 — Celery worker (parse → chunk → embed → NER → claims → ...)
 .\scripts\start-worker.ps1
 
-# Terminal 3 — Next.js frontend
+# Terminal 3 — Next.js on :3000
 .\scripts\start-frontend.ps1
 ```
 
-Then open <http://localhost:3000>, register, upload a PDF, and try the Q&A flow.
+Then:
+- Open <http://localhost:3000>, register, sign in
+- Upload a PDF on the Library page
+- Watch the pipeline progress (parse → chunk → embed → NER → relations →
+  intelligence → claims → contradictions → credibility)
+- Ask a question on the Q&A page
 
 Spot-check endpoints:
 - <http://localhost:8000/health> → `{"status":"ok"}`
 - <http://localhost:8000/readiness> → `{"status":"ready"}` when Postgres,
-  Redis, and the storage dir are all available.
+  Redis, and the storage dir are all reachable
+- <http://localhost:8000/docs> → OpenAPI
+
+### Worker queue note (Windows)
+
+Celery on Windows must use `--pool=solo`. The start script handles this; if
+you ever invoke `celery` by hand, include `--pool=solo`.
+
+---
 
 ## Tests
 
 ```powershell
 cd backend
 .\.venv\Scripts\activate
-pytest tests/test_jwt.py tests/test_chunking.py tests/test_embedding.py tests/test_llm.py
+pytest
 ```
 
-The integration tests (`test_auth.py`, `test_ingest.py`, `test_qa.py`) need
-Postgres reachable; they auto-skip otherwise. To run them,
-make sure the API is *not* running (so the test DB connection isn't competing)
-or point `DATABASE_URL` at a separate test DB.
+The Postgres-touching tests auto-skip if the DB isn't reachable. To run them
+in isolation, stop the API first or point `DATABASE_URL` at a separate test
+DB.
+
+---
 
 ## Troubleshooting
 
-- **`psycopg2.OperationalError: could not connect to server`** — Postgres
-  service isn't running. Open *Services* (`services.msc`), find
-  `postgresql-x64-16`, start it. Or check the password matches your `.env`.
-- **`ERROR: extension "vector" is not available`** when running migrations —
-  pgvector isn't installed. Re-do step 4 of prerequisites.
-- **Celery hangs / "ValueError: not enough values to unpack" on Windows** — the
-  worker pool needs to be `solo`. The start script sets `--pool=solo`; if you
-  run celery manually, include that flag.
-- **`OPENAI_API_KEY required`** — that env var no longer exists; you want
-  `GROQ_API_KEY` and `GEMINI_API_KEY` in `.env`.
+| Symptom | Fix |
+|---|---|
+| `psycopg2.OperationalError: could not connect to server` | Postgres service isn't running. Open `services.msc`, find `postgresql-x64-16`, start it. Or check the password in `.env`. |
+| `ERROR: extension "vector" is not available` during migration | pgvector isn't installed. Redo prerequisite 4. |
+| Celery hangs or `ValueError: not enough values to unpack` | Worker pool needs `--pool=solo` on Windows. Use the start script. |
+| `OPENAI_API_KEY required` | Old env var. You want `GROQ_API_KEY` + `GEMINI_API_KEY`. |
+| `connection refused` to `localhost:11434` | Ollama isn't running. Start the Ollama desktop app or `ollama serve`. Q&A still works without it; Phase 2 pipelines won't. |
+| Frontend 401 loops | `NEXTAUTH_SECRET` mismatch between server restarts, or `NEXTAUTH_URL` doesn't match the URL you're loading. |
+| Reel render fails with `ffmpeg not found` | Either reinstall `imageio-ffmpeg`, or install FFmpeg and add it to `PATH`. |
+| `429` from Groq during heavy use | Free-tier rate limit. Wait, or upgrade the Groq plan. |
 
-## Where files live
+---
 
-- Uploaded files: `./data/files/{user_id}/{document_id}/{filename}` plus a
-  `parsed.json` per document.
-- Postgres data: wherever the Postgres installer put it (default
-  `C:\Program Files\PostgreSQL\16\data`).
-- Frontend build cache: `frontend/.next`.
+## Where things live
+
+- **Uploaded files & generated media:**
+  `./data/files/{user_id}/{document_id}/...` — also holds per-document
+  `parsed.json`, reel renders, narrations, generated memes
+- **Postgres data:** wherever the Postgres installer put it (default
+  `C:\Program Files\PostgreSQL\16\data`)
+- **Frontend build cache:** `frontend/.next`
+- **Logs:** `./logs/` (gitignored)
+
+The entire `data/` tree is gitignored at any depth — uploads, generated
+videos/audio, and ML model weights never leave your machine.
+
+---
 
 ## Layout
 
 ```
 NexusMind/
-├── .env.example           Environment template
-├── README.md              This file
+├── .env.example           Env template (only env file in git)
+├── README.md              You are here
 ├── scripts/               PowerShell setup + start scripts
 ├── backend/
 │   ├── alembic/           DB migrations (pgvector + HNSW)
 │   ├── app/
-│   │   ├── api/           FastAPI routes (auth, documents, qa, health)
-│   │   ├── auth/          JWT, bcrypt, get_current_user dep
+│   │   ├── api/           FastAPI routes
+│   │   ├── auth/          JWT, bcrypt, get_current_user dependency
 │   │   ├── core/          config, structlog, exceptions
 │   │   ├── db/            async + sync SQLAlchemy sessions
 │   │   ├── models/        ORM models
-│   │   ├── schemas/       Pydantic v2
-│   │   ├── services/      storage, embedding, llm, retrieval, chunking
-│   │   ├── workers/       Celery tasks: parse → chunk → embed
+│   │   ├── schemas/       Pydantic v2 schemas
+│   │   ├── services/      storage, embedding, llm, retrieval, chunking,
+│   │   │                  claims, credibility, contradictions, media, ...
+│   │   ├── workers/       Celery tasks
 │   │   └── main.py
 │   ├── tests/
 │   └── requirements.txt
 ├── frontend/
-│   ├── app/               App-Router routes (auth + app group)
-│   ├── components/        UI primitives + feature components
+│   ├── app/               App-Router routes ((auth) + (app) groups)
+│   ├── components/        Feature components + shadcn/ui primitives
 │   ├── hooks/, services/, lib/, types/
 │   └── package.json
-└── data/files/            Uploaded files (created at first run)
+└── data/files/            Uploads + generated media (created at first run)
 ```
 
-The old Docker files (`docker-compose.yml`, `backend/Dockerfile`,
-`frontend/Dockerfile`) are no longer used. Safe to delete.
+---
+
+## License
+
+Personal project — no license declared. All rights reserved.
