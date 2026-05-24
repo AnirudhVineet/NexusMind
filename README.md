@@ -125,6 +125,25 @@ ingest + Q&A.
 
 ## API keys
 
+### Step 1 — create your `.env` file
+
+A fresh clone has **no `.env` file** (it's gitignored so secrets never get
+pushed). The repo only ships `.env.example`, a template with placeholder
+values. Your first job is to copy it:
+
+```powershell
+# From the repo root, in PowerShell:
+Copy-Item .env.example .env
+notepad .env
+```
+
+That gives you a real `.env` at the repo root with every variable the app
+needs already laid out — you just have to fill in the secrets.
+
+> macOS / Linux: `cp .env.example .env && $EDITOR .env`
+
+### Step 2 — get the keys
+
 You'll need two API keys for the default configuration: **Groq** (for Q&A) and
 **Gemini** (for embeddings). Both have generous free tiers.
 
@@ -132,22 +151,16 @@ You'll need two API keys for the default configuration: **Groq** (for Q&A) and
 |---|---|---|---|
 | `GROQ_API_KEY` | <https://console.groq.com/keys> | Q&A LLM (`llama-3.3-70b-versatile`) | Yes |
 | `GEMINI_API_KEY` | <https://aistudio.google.com/apikey> | Chunk embeddings (`gemini-embedding-001`) | Yes |
-| `JWT_SECRET` | Generate locally (32 random bytes) | Backend session signing | Yes |
-| `NEXTAUTH_SECRET` | Generate locally (32 random bytes) | NextAuth session signing | Yes |
+| `JWT_SECRET` | Generate locally (32 random bytes — see below) | Backend session signing | Yes |
+| `NEXTAUTH_SECRET` | Generate locally (32 random bytes — see below) | NextAuth session signing | Yes |
 | `SENTRY_DSN_BACKEND` | <https://sentry.io> project settings | Error tracking (optional) | No |
 | `SENTRY_DSN_FRONTEND` | <https://sentry.io> project settings | Error tracking (optional) | No |
 | `METRICS_TOKEN` | Generate locally | Bearer token for `/metrics` (optional) | No |
 
-### Where the keys go
+### Step 3 — paste them into `.env`
 
-All keys live in a single `.env` file at the repo root. Copy the template:
-
-```powershell
-Copy-Item .env.example .env
-notepad .env
-```
-
-Then edit the values. The relevant block looks like this:
+Open the `.env` you created in step 1 and replace the placeholder values. The
+relevant block looks like this:
 
 ```ini
 # AI: LLM (Groq, OpenAI-compatible)
@@ -178,7 +191,8 @@ Run it twice — once for `JWT_SECRET`, once for `NEXTAUTH_SECRET`.
 ### Security notes
 
 - `.env` is in `.gitignore` (along with `.env.local`, `*.pem`, `*.key`,
-  `secrets/`). It will never be committed.
+  `secrets/`). It will never be committed — that's why you have to create it
+  yourself in step 1.
 - The only env file that *is* tracked is `.env.example` — a template with
   placeholder values.
 - Rotate `GROQ_API_KEY` / `GEMINI_API_KEY` from the provider dashboards if
@@ -191,7 +205,7 @@ Run it twice — once for `JWT_SECRET`, once for `NEXTAUTH_SECRET`.
 From the repo root, in PowerShell:
 
 ```powershell
-# 1. .env (see "API keys" above)
+# 1. Create .env and fill in your API keys (see "API keys" section above)
 Copy-Item .env.example .env
 notepad .env
 
