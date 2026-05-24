@@ -6,8 +6,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api import annotations, auth, cards, conversations, credibility, documents, graph, health, ingest, intelligence, metrics, qa
-from app.api import events, research, graph_export, workflows, feeds, email_settings, alerts, notifications, push, content
+from app.api import annotations, auth, cards, conversations, credibility, documents, health, ingest, intelligence, metrics, qa
+from app.api import events, research, content
 # Phase 5 routers
 from app.api import media as media_api
 from app.api import media_narration as media_narration_api
@@ -111,7 +111,6 @@ def create_app() -> FastAPI:
     app.include_router(auth.router)
     app.include_router(documents.router)
     app.include_router(qa.router)
-    app.include_router(graph.router)
     app.include_router(intelligence.router)
     app.include_router(credibility.router)
     app.include_router(conversations.router)
@@ -121,13 +120,6 @@ def create_app() -> FastAPI:
     # Phase 4 routers
     app.include_router(events.router)
     app.include_router(research.router)
-    app.include_router(graph_export.router)
-    app.include_router(workflows.router)
-    app.include_router(feeds.router)
-    app.include_router(email_settings.router)
-    app.include_router(alerts.router)
-    app.include_router(notifications.router)
-    app.include_router(push.router)
     app.include_router(content.router)
     # Phase 5
     app.include_router(media_api.router)

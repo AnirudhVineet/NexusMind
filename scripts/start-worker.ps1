@@ -15,7 +15,6 @@ param(
 #   credibility : credibility          — credibility scoring (~5-15s per doc)
 #   misc        : ocr,transcription,cards,maintenance — infrequent tasks
 #   research    : research             — Phase 4 research brief generation
-#   phase4      : alerts               — Phase 4 semantic alert checks + email digest
 #   media       : reel                 — Phase 5 reel/narration/storyboard/bundle render jobs
 #   content     : content              — Phase 4 Track H content repurposing
 #
@@ -103,7 +102,6 @@ if ($Lite) {
         @{ Name = "NM-credibility"; Queues = "credibility" },
         @{ Name = "NM-misc";        Queues = "ocr,transcription,cards,maintenance" },
         @{ Name = "NM-research";    Queues = "research" },
-        @{ Name = "NM-phase4";      Queues = "alerts" },
         @{ Name = "NM-media";       Queues = "reel" },
         @{ Name = "NM-content";     Queues = "content" }
     )

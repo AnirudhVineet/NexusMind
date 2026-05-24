@@ -127,7 +127,6 @@ def test_alembic_chain_linear() -> None:
         "app.workers.intelligence",
         "app.workers.maintenance",
         "app.services.llm_local",
-        "app.services.graph",
         "app.services.intelligence",
     ],
 )

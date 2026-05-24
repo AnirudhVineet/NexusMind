@@ -1,12 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { Trash2, X, Hash, MessageSquare, Palette } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { AnnotationColor } from "@/types/api";
 
 import { ANNOTATION_COLORS, swatchClass } from "./colors";
+import { Separator } from "@/components/ui/separator";
 
 interface Props {
   mode: "create" | "edit";
@@ -47,71 +51,125 @@ export function AnnotationPopover({
 
   return (
     <div
-      className="absolute z-50 w-72 rounded-lg border border-border bg-surface p-3 shadow-xl"
+      className="absolute z-50 w-[300px] rounded-xl border bg-card p-4 shadow-2xl animate-in zoom-in-95 duration-200"
       style={{ top: position.top, left: position.left }}
       onMouseUp={(e) => e.stopPropagation()}
     >
-      <p className="text-[11px] text-muted mb-2 line-clamp-2 italic">
-        “{highlightText}”
-      </p>
-
-      <div className="flex gap-1.5 mb-2">
-        {ANNOTATION_COLORS.map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setColor(c)}
-            className={cn(
-              "h-5 w-5 rounded-full transition-transform",
-              swatchClass[c],
-              color === c ? "ring-2 ring-white scale-110" : "opacity-70"
-            )}
-            aria-label={c}
-          />
-        ))}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2 text-primary">
+          <MessageSquare className="h-4 w-4" />
+          <span className="text-xs font-bold uppercase tracking-wider">
+            {mode === "create" ? "New Annotation" : "Edit Annotation"}
+          </span>
+        </div>
+        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClose}>
+          <X className="h-3 w-3" />
+        </Button>
       </div>
 
-      <textarea
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-        placeholder="Add a note (optional)…"
-        rows={3}
-        autoFocus
-        className="w-full rounded-md bg-bg border border-border px-2 py-1.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent"
-      />
+      <div className="rounded-lg bg-muted/50 p-2.5 mb-4 border border-border/50">
+        <p className="text-xs text-foreground/80 leading-relaxed italic line-clamp-3">
+          “{highlightText}”
+        </p>
+      </div>
 
-      <input
-        value={tagsRaw}
-        onChange={(e) => setTagsRaw(e.target.value)}
-        placeholder="tags, comma, separated"
-        className="mt-2 w-full rounded-md bg-bg border border-border px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-accent"
-      />
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+              <Palette className="h-3 w-3" />
+              Highlight Color
+            </Label>
+          </div>
+          <div className="flex gap-2">
+            {ANNOTATION_COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setColor(c)}
+                className={cn(
+                  "h-6 w-6 rounded-full transition-all border-2",
+                  swatchClass[c],
+                  color === c ? "border-foreground scale-110 shadow-lg" : "border-transparent opacity-60 hover:opacity-100"
+                )}
+                aria-label={c}
+              />
+            ))}
+          </div>
+        </div>
 
-      <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+            <MessageSquare className="h-3 w-3" />
+            Notes
+          </Label>
+          <Textarea
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="What makes this highlight important?"
+            rows={3}
+            autoFocus
+            className="text-xs resize-none bg-background focus-visible:ring-primary"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+            <Hash className="h-3 w-3" />
+            Tags
+          </Label>
+          <Input
+            value={tagsRaw}
+            onChange={(e) => setTagsRaw(e.target.value)}
+            placeholder="research, insight, key-point"
+            className="text-xs bg-background h-8"
+          />
+        </div>
+      </div>
+
+      <Separator className="my-4" />
+
+      <div className="flex items-center justify-between">
         {mode === "edit" && onDelete ? (
-          <Button variant="danger" onClick={onDelete} className="px-2 py-1 text-xs">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onDelete} 
+            className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4 mr-2" />
             Delete
           </Button>
         ) : (
-          <span />
+          <div />
         )}
         <div className="flex gap-2">
           <Button
             variant="ghost"
+            size="sm"
             onClick={onClose}
-            className="px-2 py-1 text-xs"
+            className="h-8 px-3"
           >
             Cancel
           </Button>
           <Button
+            size="sm"
             onClick={handleSave}
             disabled={saving}
-            className="px-3 py-1 text-xs"
+            className="h-8 px-4"
           >
             {saving ? "Saving…" : "Save"}
           </Button>
         </div>
       </div>
     </div>
+  );
+}
+
+function Label({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <label className={cn("text-xs font-medium leading-none", className)}>
+      {children}
+    </label>
   );
 }

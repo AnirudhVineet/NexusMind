@@ -226,13 +226,25 @@ export function DocumentViewer({ documentId }: Props) {
   }
 
   if (isLoading) {
-    return <p className="text-sm text-muted">Loading document…</p>;
+    return (
+      <div className="space-y-6">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="space-y-2">
+            <div className="h-4 w-full bg-muted animate-pulse rounded" />
+            <div className="h-4 w-[90%] bg-muted animate-pulse rounded" />
+            <div className="h-4 w-[95%] bg-muted animate-pulse rounded" />
+          </div>
+        ))}
+      </div>
+    );
   }
   if (!chunks || chunks.length === 0) {
     return (
-      <p className="text-sm text-muted">
-        No extracted text yet — the document may still be processing.
-      </p>
+      <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed rounded-xl">
+        <p className="text-sm text-muted-foreground max-w-[250px]">
+          No extracted text yet — the document may still be processing in the background.
+        </p>
+      </div>
     );
   }
 

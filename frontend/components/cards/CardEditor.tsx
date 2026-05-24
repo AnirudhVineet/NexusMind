@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { Edit2, Trash2, ShieldAlert, CheckCircle2, RotateCcw } from "lucide-react";
 
 import { useToast } from "@/components/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { useDeleteCard, useUpdateCard } from "@/hooks/useFlashcards";
 import type { Flashcard } from "@/types/api";
+import { cn } from "@/lib/utils";
 
 export function CardEditor({ card }: { card: Flashcard }) {
   const [editing, setEditing] = useState(false);
@@ -48,23 +51,29 @@ export function CardEditor({ card }: { card: Flashcard }) {
 
   if (editing) {
     return (
-      <li className="rounded-lg border border-border bg-surface p-4 space-y-2">
-        <textarea
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          rows={2}
-          className="w-full rounded-md bg-bg border border-border px-2 py-1.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent"
-        />
-        <textarea
-          value={answer}
-          onChange={(e) => setAnswer(e.target.value)}
-          rows={3}
-          className="w-full rounded-md bg-bg border border-border px-2 py-1.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-accent"
-        />
-        <div className="flex justify-end gap-2">
+      <li className="rounded-xl border bg-card p-4 space-y-4 animate-in fade-in duration-200">
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Question</label>
+          <Textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            rows={2}
+            className="text-sm bg-background"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Answer</label>
+          <Textarea
+            value={answer}
+            onChange={(e) => setAnswer(e.target.value)}
+            rows={3}
+            className="text-sm bg-background"
+          />
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
           <Button
             variant="ghost"
-            className="px-2 py-1 text-xs"
+            size="sm"
             onClick={() => {
               setQuestion(card.question);
               setAnswer(card.answer);
@@ -74,11 +83,11 @@ export function CardEditor({ card }: { card: Flashcard }) {
             Cancel
           </Button>
           <Button
-            className="px-3 py-1 text-xs"
+            size="sm"
             disabled={update.isPending || !question.trim() || !answer.trim()}
             onClick={save}
           >
-            Save
+            Save Changes
           </Button>
         </div>
       </li>
@@ -86,40 +95,75 @@ export function CardEditor({ card }: { card: Flashcard }) {
   }
 
   return (
-    <li className="rounded-lg border border-border bg-surface p-4">
-      <p className="text-sm font-medium">{card.question}</p>
-      <p className="mt-1 text-sm text-muted">{card.answer}</p>
-      <div className="mt-2 flex flex-wrap items-center gap-2">
-        {card.reps >= 3 ? (
-          <Badge tone="green">mastered</Badge>
-        ) : (
-          <Badge tone="muted">{card.reps} reps</Badge>
-        )}
-        <Badge tone="muted">due {card.due_date}</Badge>
-        {card.suspended && <Badge tone="red">suspended</Badge>}
-        <div className="ml-auto flex gap-2">
+    <li className={cn(
+      "rounded-xl border bg-card p-5 shadow-sm group hover:shadow-md transition-all",
+      card.suspended && "opacity-60 grayscale-[0.5]"
+    )}>
+      <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="space-y-3 flex-1">
+          <div>
+             <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Question</h4>
+             <p className="text-sm font-medium leading-relaxed">{card.question}</p>
+          </div>
+          <div>
+             <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Answer</h4>
+             <p className="text-sm text-foreground/80 leading-relaxed italic border-l-2 border-primary/20 pl-3">
+               {card.answer}
+             </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             variant="ghost"
-            className="px-2 py-1 text-xs"
+            size="icon"
+            className="h-8 w-8"
             onClick={() => setEditing(true)}
+            title="Edit card"
           >
-            Edit
+            <Edit2 className="h-4 w-4" />
           </Button>
           <Button
             variant="ghost"
-            className="px-2 py-1 text-xs"
+            size="icon"
+            className={cn("h-8 w-8", card.suspended ? "text-primary" : "text-muted-foreground")}
             onClick={toggleSuspend}
+            title={card.suspended ? "Unsuspend" : "Suspend"}
           >
-            {card.suspended ? "Unsuspend" : "Suspend"}
+            <RotateCcw className="h-4 w-4" />
           </Button>
           <Button
-            variant="secondary"
-            className="px-2 py-1 text-xs"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
             onClick={remove}
+            title="Delete card"
           >
-            Delete
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border/50">
+        {card.reps >= 3 ? (
+          <Badge variant="success" className="gap-1 px-2">
+            <CheckCircle2 className="h-3 w-3" />
+            Mastered
+          </Badge>
+        ) : (
+          <Badge variant="muted" className="px-2">
+            {card.reps} reps
+          </Badge>
+        )}
+        <Badge variant="outline" className="text-[10px] font-normal border-dashed">
+          Due {card.due_date}
+        </Badge>
+        {card.suspended && (
+          <Badge variant="destructive" className="gap-1 px-2">
+            <ShieldAlert className="h-3 w-3" />
+            Suspended
+          </Badge>
+        )}
       </div>
     </li>
   );

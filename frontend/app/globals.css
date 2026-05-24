@@ -2,15 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    --background: 220 31% 4%;
+    --foreground: 231 25% 93%;
+
+    --surface-0: 220 31% 4%;
+    --surface-1: 222 25% 6%;
+    --surface-2: 222 23% 9%;
+    --surface-3: 222 22% 12%;
+    --surface-4: 222 21% 16%;
+
+    --text-1: 231 25% 93%;
+    --text-2: 224 16% 75%;
+    --text-3: 223 11% 54%;
+    --text-4: 224 13% 33%;
+
+    --card: 222 25% 6%;
+    --card-foreground: 231 25% 93%;
+
+    --popover: 222 22% 12%;
+    --popover-foreground: 231 25% 93%;
+
+    --primary: 227 100% 71%;
+    --primary-foreground: 220 31% 4%;
+
+    --secondary: 222 25% 6%;
+    --secondary-foreground: 231 25% 93%;
+
+    --muted: 222 23% 9%;
+    --muted-foreground: 223 11% 54%;
+
+    --accent: 222 23% 9%;
+    --accent-foreground: 231 25% 93%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 231 25% 93%;
+
+    --border: 225 23% 18%;
+    --input: 225 23% 18%;
+    --ring: 227 100% 71%;
+
+    --radius: 0.5rem;
+  }
 }
 
-html, body {
-  background: #0b0d12;
-  color: #e5e7ee;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
 }
 
 mark {

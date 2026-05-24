@@ -40,9 +40,6 @@ class TestMatchEventType:
     def test_empty_path_returns_none(self):
         assert _match_event_type("") is None
 
-    def test_get_graph_returns_none(self):
-        assert _match_event_type("/api/graph") is None
-
 
 # ---------------------------------------------------------------------------
 # _extract_user_id

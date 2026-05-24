@@ -15,7 +15,7 @@ const TONE: Record<ProcessingStatus, "muted" | "amber" | "green" | "red"> = {
 export function StatusBadge({ status }: { status: ProcessingStatus }) {
   const isWorking = ["parsing", "chunking", "embedding"].includes(status);
   return (
-    <Badge tone={TONE[status]} className={isWorking ? "animate-pulse" : ""}>
+    <Badge variant={TONE[status] === "green" ? "success" : TONE[status] === "amber" ? "warning" : TONE[status] === "red" ? "destructive" : "secondary"} className={isWorking ? "animate-pulse" : ""}>
       {status}
     </Badge>
   );

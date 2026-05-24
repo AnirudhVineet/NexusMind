@@ -24,9 +24,6 @@ celery_app = Celery(
         "app.workers.cards",
         # Phase 4 workers
         "app.workers.research",
-        "app.workers.graph_export",
-        "app.workers.workflows",
-        "app.workers.alerts",
         "app.workers.content",
         # Phase 5 workers
         "app.workers.media",
@@ -63,7 +60,6 @@ celery_app.conf.update(
         "cards": {"exchange": "cards", "routing_key": "cards"},
         # Phase 4 queues
         "research": {"exchange": "research", "routing_key": "research"},
-        "alerts": {"exchange": "alerts", "routing_key": "alerts"},
         # Phase 5 queue
         "reel": {"exchange": "reel", "routing_key": "reel"},
         # Content repurposing — dedicated queue so script/caption/thread/meme
@@ -80,27 +76,6 @@ celery_app.conf.update(
         "recompute-topics-daily": {
             "task": "recompute_topics",
             "schedule": 60 * 60 * 24,
-            "options": {"queue": "maintenance"},
-        },
-        # Phase 4 beat tasks
-        "poll-rss-feeds-5min": {
-            "task": "poll_rss_feeds",
-            "schedule": 60 * 5,
-            "options": {"queue": "default"},
-        },
-        "card-due-threshold-daily": {
-            "task": "card_due_threshold_check",
-            "schedule": 60 * 60 * 24,
-            "options": {"queue": "default"},
-        },
-        "send-email-digest-daily": {
-            "task": "send_email_digest",
-            "schedule": 60 * 60 * 24,
-            "options": {"queue": "alerts"},
-        },
-        "cleanup-expired-graph-exports-hourly": {
-            "task": "cleanup_expired_graph_exports",
-            "schedule": 60 * 60,
             "options": {"queue": "maintenance"},
         },
         # Phase 5 beat tasks

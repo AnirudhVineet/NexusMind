@@ -1,36 +1,40 @@
-"use client";
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-type Tone = "default" | "muted" | "amber" | "green" | "red" | "blue";
+const badgeVariants = cva(
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default:
+          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+        secondary:
+          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        destructive:
+          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
+        outline: "text-foreground",
+        success: "border-transparent bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
+        warning: "border-transparent bg-amber-500/10 text-amber-500 border-amber-500/20",
+        muted: "border-transparent bg-muted text-muted-foreground",
+        blue: "border-transparent bg-blue-500/10 text-blue-500 border-blue-500/20",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
 
-const toneClass: Record<Tone, string> = {
-  default: "bg-surface border-border text-white",
-  muted: "bg-surface border-border text-muted",
-  amber: "bg-amber-950 border-amber-800 text-amber-200",
-  green: "bg-emerald-950 border-emerald-800 text-emerald-200",
-  red: "bg-red-950 border-red-800 text-red-200",
-  blue: "bg-blue-950 border-blue-800 text-blue-200",
-};
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
 
-export function Badge({
-  tone = "default",
-  className,
-  children,
-}: {
-  tone?: Tone;
-  className?: string;
-  children: React.ReactNode;
-}) {
+function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full border px-2 py-0.5 text-xs",
-        toneClass[tone],
-        className
-      )}
-    >
-      {children}
-    </span>
-  );
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  )
 }
+
+export { Badge, badgeVariants }
