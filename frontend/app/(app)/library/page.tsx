@@ -2,24 +2,27 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { 
-  FileText, 
-  Search, 
-  Trash2, 
-  ExternalLink, 
-  Clock, 
-  Globe, 
+import {
+  FileText,
+  Search,
+  Trash2,
+  ExternalLink,
+  Clock,
+  Globe,
   Database,
   Plus,
   Filter,
   MoreVertical,
-  AlertCircle
+  AlertCircle,
+  BookOpen,
 } from "lucide-react";
 
 import { CredibilityBadge } from "@/components/credibility/CredibilityBadge";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/upload/status-badge";
 import { useDeleteDocument, useDocuments } from "@/hooks/useDocuments";
+import { useGenerateCards } from "@/hooks/useFlashcards";
+import { useToast } from "@/components/toast";
 import { formatBytes } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { 
@@ -42,6 +45,8 @@ function scoreLabel(score: number): "low" | "moderate" | "high" | "very_high" {
 export default function LibraryPage() {
   const { data, isLoading } = useDocuments();
   const del = useDeleteDocument();
+  const generateCards = useGenerateCards();
+  const toast = useToast();
   const [search, setSearch] = useState("");
 
   const filteredDocs = data?.filter(doc => 
@@ -124,13 +129,27 @@ export default function LibraryPage() {
                         <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-40">
+                    <DropdownMenuContent align="end" className="w-48">
                       <DropdownMenuItem asChild>
                         <Link href={`/library/${doc.id}`} className="cursor-pointer">
                           Open Details
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
+                        disabled={doc.processing_status !== "complete"}
+                        onClick={() =>
+                          generateCards.mutate(doc.id, {
+                            onSuccess: () =>
+                              toast.push("success", `Cards queued for "${doc.filename}"`),
+                            onError: (e: any) =>
+                              toast.push("error", e?.message ?? "Failed to queue generation"),
+                          })
+                        }
+                      >
+                        <BookOpen className="h-4 w-4 mr-2" />
+                        Generate cards
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
                         className="text-destructive focus:text-destructive"
                         onClick={() => {
                           if (confirm(`Delete "${doc.filename}"?`)) del.mutate(doc.id);

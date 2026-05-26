@@ -97,13 +97,23 @@ def create_app() -> FastAPI:
     async def unhandled_exception_handler(request: Request, exc: Exception):
         log.exception("unhandled_exception")
         request_id = request.headers.get("X-Request-ID")
+        # ServerErrorMiddleware runs outside CORSMiddleware, so 500 responses
+        # never reach the CORS send-wrapper. Add the header manually so browsers
+        # get a readable error instead of a blocked "Failed to fetch".
+        origin = request.headers.get("origin")
+        extra_headers: dict = {}
+        if origin in ["http://localhost:3000"]:
+            extra_headers["Access-Control-Allow-Origin"] = origin
+            extra_headers["Access-Control-Allow-Credentials"] = "true"
+        debug_detail = "Internal server error"
         return JSONResponse(
             status_code=500,
             content={
-                "detail": "Internal server error",
+                "detail": debug_detail,
                 "code": "internal_error",
                 "request_id": request_id,
             },
+            headers=extra_headers or None,
         )
 
     app.include_router(health.router)

@@ -1,5 +1,6 @@
-﻿"use client";
+"use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { ReviewModal } from "@/components/cards/ReviewModal";
@@ -40,25 +41,34 @@ export default function FlashcardsPage() {
 
       <div className="rounded-xl border border-border bg-surface p-8 text-center">
         {isLoading ? (
-          <p className="text-muted-foreground text-sm">Loading…</p>
+          <p className="text-muted-foreground text-sm">Loading...</p>
         ) : dueCount > 0 ? (
           <>
             <p className="text-lg">
               {dueCount} card{dueCount === 1 ? "" : "s"} ready for review.
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Space to flip · keys 1–4 to grade · Esc to exit.
+              Space to flip &middot; keys 1&ndash;4 to grade &middot; Esc to exit.
             </p>
             <Button className="mt-5" onClick={() => setReviewing(true)}>
               Start review
             </Button>
           </>
         ) : (
-          <p className="text-muted-foreground">
-            {stats?.total
-              ? "Nothing due right now — come back when cards are scheduled."
-              : "No cards yet. Open a document and use “Generate cards” to get started."}
-          </p>
+          <div className="space-y-3">
+            <p className="text-muted-foreground">
+              {stats?.total
+                ? "Nothing due right now - come back when cards are scheduled."
+                : "No cards yet."}
+            </p>
+            {!stats?.total && (
+              <Link href="/library">
+                <Button variant="outline" size="sm">
+                  Go to Library to generate cards
+                </Button>
+              </Link>
+            )}
+          </div>
         )}
       </div>
 
